@@ -142,7 +142,9 @@ Use a **calculated column** when a persistent row-level value is required.
 
 ---
 
-<img width="1712" height="795" alt="image" src="https://github.com/user-attachments/assets/f30e8d88-ed21-47ca-a085-ac1f27c9d5b0" />
+<img width="1712" height="795" alt="Comparison of a Power BI measure and calculated column with examples" src="https://github.com/user-attachments/assets/f30e8d88-ed21-47ca-a085-ac1f27c9d5b0" />
+
+**Figure S05-01 — DAX Measures vs Calculated Columns: Key Differences**
 
 ---
 
@@ -273,7 +275,9 @@ the same measure is evaluated separately under each Month's **filter context**.
 
 ---
 
-<img width="1860" height="791" alt="image" src="https://github.com/user-attachments/assets/740a866d-46f7-427d-8a66-db529807c504" />
+<img width="1860" height="791" alt="Diagram explaining DAX row context and filter context" src="https://github.com/user-attachments/assets/740a866d-46f7-427d-8a66-db529807c504" />
+
+**Figure S05-02 — DAX Evaluation Context: Row Context vs Filter Context**
 
 ---
 
@@ -584,7 +588,9 @@ Then apply Product and Plant slicers.
 
 ---
 
-<img width="1807" height="791" alt="image" src="https://github.com/user-attachments/assets/e5c807b5-da00-44d4-8535-b53e6b3bfa09" />
+<img width="1807" height="791" alt="Nirvaan Pharma Ltd production KPI measures displayed in Power BI" src="https://github.com/user-attachments/assets/e5c807b5-da00-44d4-8535-b53e6b3bfa09" />
+
+**Figure S05-03 — Nirvaan Pharma Ltd Production KPIs: Core DAX Measures**
 
 ---
 
