@@ -588,7 +588,7 @@ Then apply Product and Plant slicers.
 
 ---
 
-<img width="1807" height="791" alt="Nirvaan Pharma Ltd production KPI measures displayed in Power BI" src="https://github.com/user-attachments/assets/e5c807b5-da00-44d4-8535-b53e6b3bfa09" />
+<img width="1792" height="922" alt="Nirvaan Pharma Ltd production KPI measures displayed in Power BI" src="https://github.com/user-attachments/assets/72c4a85a-114d-4cf0-848d-fd3e42767be1" />
 
 **Figure S05-03 — Nirvaan Pharma Ltd Production KPIs: Core DAX Measures**
 
