@@ -128,14 +128,18 @@ Create:
 
 ```DAX
 Production Previous Month =
-CALCULATE(
-    [Production Quantity],
+VAR PreviousMonthDates =
     DATEADD(
-        DimDate[Date],
+        VALUES(DimDate[Date]),
         -1,
         MONTH
     )
-)
+RETURN
+    CALCULATE(
+        [Production Quantity],
+        REMOVEFILTERS(DimDate),
+        PreviousMonthDates
+    )
 ```
 
 ### Month-over-Month Variance
