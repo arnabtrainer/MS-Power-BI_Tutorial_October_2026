@@ -2,7 +2,7 @@
 
 **Day:** 2 — Pre-Lunch  
 **Duration:** 3 Hours  
-**Case Company:** **Nirvaan Pharma Ltd** *(fictitious training company)*
+**Case Company:** **Nirvaan Pharma Ltd** *(fictitious pharma company)*
 
 ---
 
