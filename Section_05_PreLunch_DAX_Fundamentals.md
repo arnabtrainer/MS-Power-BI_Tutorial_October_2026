@@ -140,8 +140,9 @@ Use a **measure** when the result should change with report filters.
 
 Use a **calculated column** when a persistent row-level value is required.
 
-> 🖼️ **Image Placeholder S05-01:** Compact comparison showing **Measure vs Calculated Column** and where each is evaluated.  
-> **Planned file:** `images/S05_01_Measure_vs_Calculated_Column.png`
+---
+
+<img width="1712" height="795" alt="image" src="https://github.com/user-attachments/assets/f30e8d88-ed21-47ca-a085-ac1f27c9d5b0" />
 
 ---
 
@@ -270,8 +271,9 @@ SUM(RN_East1[EastSales])
 
 the same measure is evaluated separately under each Month's **filter context**.
 
-> 🖼️ **Image Placeholder S05-02:** Diagram contrasting **Row Context** with **Filter Context** using a small table and slicer.  
-> **Planned file:** `images/S05_02_Row_vs_Filter_Context.png`
+---
+
+<img width="1860" height="791" alt="image" src="https://github.com/user-attachments/assets/740a866d-46f7-427d-8a66-db529807c504" />
 
 ---
 
@@ -580,8 +582,9 @@ Then apply Product and Plant slicers.
 
 ✅ Measures should respond automatically through the relationships created in Section 4.
 
-> 🖼️ **Image Placeholder S05-03:** Simple production KPI table/cards showing Production Quantity, Good Quantity, Rejected Quantity, Yield %, and Production Cost.  
-> **Planned file:** `images/S05_03_Nirvaan_Production_KPIs.png`
+---
+
+<img width="1807" height="791" alt="image" src="https://github.com/user-attachments/assets/e5c807b5-da00-44d4-8535-b53e6b3bfa09" />
 
 ---
 
