@@ -10,14 +10,13 @@
 
 By the end of this session, learners should be able to:
 
-- 🎯 Apply **time-intelligence calculations** using the Date dimension.
-- 🎯 Compare current performance with **previous month** and **previous year**.
-- 🎯 Calculate **MTD, QTD, Calendar YTD, and Fiscal YTD**.
+- 🎯 Apply basic **time-intelligence calculations** using the Date dimension.
+- 🎯 Compare current production with the **previous month** and **previous year**.
+- 🎯 Understand **MTD, QTD, Calendar YTD, and Fiscal YTD**.
 - 🎯 Build **Production Plan vs Actual** measures.
-- 🎯 Create **variance, attainment, and ranking** measures.
-- 🎯 Use `SELECTEDVALUE()` and `SWITCH()` for simple dynamic calculations.
-- 🎯 Use `USERELATIONSHIP()` with inactive Date relationships.
-- 🎯 Validate advanced DAX using Product, Plant, and Date filters.
+- 🎯 Calculate **variance** and **plan attainment %**.
+- 🎯 Use `USERELATIONSHIP()` with an inactive Date relationship.
+- 🎯 Validate DAX measures using simple Date, Product, and Plant filters.
 
 ---
 
@@ -58,16 +57,16 @@ Primary tables:
 
 | # | Topic | Main Activity | Delivery |
 |---|---|---|---|
-| 1 | Date Context | Validate Date table and fiscal sorting | 💻 Guided |
+| 1 | Date Context | Validate Date table | 💻 Guided |
 | 2 | Previous Period | Previous Month / Previous Year | 💻 Guided |
-| 3 | MTD / QTD / YTD | Time-intelligence measures | 💻 Guided |
+| 3 | MTD / QTD / YTD | Short time-intelligence examples | 🧑‍🏫 Demo |
 | 4 | Fiscal YTD | April–March fiscal year | 💻 Guided |
 | 5 | Plan vs Actual | Production vs production plan | 💻 Guided |
 | 6 | Variance / Attainment | Business KPI calculations | 💻 Guided |
-| 7 | Ranking | Product ranking with `RANKX` | 💻 Guided |
-| 8 | Dynamic Selection | `SELECTEDVALUE` + `SWITCH` | 🧑‍🏫 Demo |
-| 9 | Inactive Relationships | `USERELATIONSHIP()` | 💻 Guided |
-| 10 | Validation | Slicers, matrix, trend visual | 💻 Guided |
+| 7 | Inactive Relationship | `USERELATIONSHIP()` | 💻 Guided |
+| 8 | Validation | Simple cards, table, and slicers | 💻 Guided |
+
+> 💡 **Scope:** Ranking, dynamic KPI selection, field parameters, and more complex filter-context patterns are moved to later advanced-reporting sessions.
 
 ---
 
@@ -75,14 +74,14 @@ Primary tables:
 
 | Time | Activity |
 |---|---|
-| 00:00–00:15 | 🔁 DAX context recap and Date-table validation |
-| 00:15–00:45 | 💻 Previous-period calculations |
-| 00:45–01:15 | 💻 MTD, QTD, Calendar YTD and Fiscal YTD |
-| 01:15–01:50 | 💻 Production Plan vs Actual and variance |
-| 01:50–02:10 | 💻 Ranking and Top-N logic |
-| 02:10–02:30 | 🧑‍🏫 Dynamic measure selection |
-| 02:30–02:50 | 💻 `USERELATIONSHIP()` with Release Date |
-| 02:50–03:00 | 🔁 Validation and recap |
+| 00:00–00:15 | 🔁 DAX recap and Date-table validation |
+| 00:15–00:45 | 💻 Previous Month and Previous Year |
+| 00:45–01:05 | 🧑‍🏫 MTD, QTD, Calendar YTD overview |
+| 01:05–01:25 | 💻 Fiscal YTD |
+| 01:25–02:05 | 💻 Production Plan vs Actual |
+| 02:05–02:25 | 💻 Variance and Plan Attainment % |
+| 02:25–02:45 | 💻 `USERELATIONSHIP()` with Release Date |
+| 02:45–03:00 | 🔁 Validation, recap, and Q&A |
 
 > 📝 The 12 MCQs can be used as an end-of-session or post-session self-check.
 
@@ -90,7 +89,7 @@ Primary tables:
 
 ## 📚 1. Time Intelligence Prerequisites
 
-Time intelligence works correctly only when the model has a reliable Date dimension.
+Time intelligence requires a reliable Date dimension.
 
 Use:
 
@@ -102,44 +101,31 @@ Use:
 
 - ✅ Dates are unique and continuous.
 - ✅ `DimDate` is marked as a Date table where applicable.
-- ✅ Month labels are sorted correctly.
-- ✅ Fiscal fields use the April–March calendar.
+- ✅ Date relationships are correctly configured.
+- ✅ Fiscal fields follow the April–March calendar.
 
-Useful fields include:
+### 💡 Teaching Rule
 
-- `Date`
-- `MonthName`
-- `MonthNumber`
-- `CalendarYear`
-- `FiscalYear`
-- `FiscalMonthNumber`
-- `FiscalYearMonth`
-- `FiscalPeriodSortKey`
+> **One business question → one short DAX measure → one visual validation.**
 
-### 💡 Important
-
-For **Production Plan vs Actual**, prefer Month/Fiscal Month context rather than individual day context because `FactProductionPlan` is stored at monthly planning grain.
+Avoid teaching several long formulas together.
 
 ---
 
 ## 💻 2. Previous Month Production
 
+### Business Question
+
+> How much production was recorded in the previous month?
+
 Create:
 
 ```DAX
 Production Previous Month =
-VAR PreviousMonthDates =
-    DATEADD(
-        VALUES(DimDate[Date]),
-        -1,
-        MONTH
-    )
-RETURN
-    CALCULATE(
-        [Production Quantity],
-        REMOVEFILTERS(DimDate),
-        PreviousMonthDates
-    )
+CALCULATE(
+    [Production Quantity],
+    PREVIOUSMONTH(DimDate[Date])
+)
 ```
 
 ### Month-over-Month Variance
@@ -160,18 +146,25 @@ DIVIDE(
 )
 ```
 
-### ✅ Validation
+### ✅ Simple Validation
 
-Use a matrix:
+Use:
 
-- Rows → `DimDate[FiscalYearMonth]`
-- Values → Production Quantity, Previous Month, MoM Variance, MoM %
+- a **Date slicer** based on `DimDate[Date]`
+- Card → `[Production Quantity]`
+- Card → `[Production Previous Month]`
 
-Sort `FiscalYearMonth` using `FiscalPeriodSortKey`.
+Select a complete month in the Date slicer and compare the two values.
+
+> 💡 Keep the first demonstration simple. Avoid using custom `FiscalYearMonth` as the Matrix row while introducing `PREVIOUSMONTH()`.
 
 ---
 
 ## 💻 3. Previous Year Production
+
+### Business Question
+
+> How much production was recorded during the corresponding period one year earlier?
 
 Create:
 
@@ -179,9 +172,7 @@ Create:
 Production Previous Year =
 CALCULATE(
     [Production Quantity],
-    SAMEPERIODLASTYEAR(
-        DimDate[Date]
-    )
+    SAMEPERIODLASTYEAR(DimDate[Date])
 )
 ```
 
@@ -203,13 +194,20 @@ DIVIDE(
 )
 ```
 
-### 💡 Teaching Point
+### ✅ Simple Validation
 
-`SAMEPERIODLASTYEAR()` shifts the current Date context to the corresponding period one year earlier.
+Use the same Date slicer and compare:
+
+- `[Production Quantity]`
+- `[Production Previous Year]`
+
+> 💡 If the selected period has no corresponding prior-year production data, the Previous Year measure may legitimately be blank.
 
 ---
 
-## 💻 4. MTD, QTD and Calendar YTD
+## 🧑‍🏫 4. MTD, QTD and Calendar YTD
+
+Introduce these as short standard patterns.
 
 ### Month-to-Date
 
@@ -241,12 +239,16 @@ TOTALYTD(
 )
 ```
 
-### ✅ Validation
+### 💡 Teaching Point
 
-Use Date/Month filters and confirm that each measure accumulates according to its time window.
+- **MTD** → start of month to current date
+- **QTD** → start of quarter to current date
+- **YTD** → start of year to current date
 
-> 🖼️ **Image Placeholder S06-01:** Matrix showing Production Quantity, Previous Month, Previous Year, MTD, QTD, and YTD by fiscal month.  
-> **Planned file:** `images/S06_01_Time_Intelligence_Matrix.png`
+> 🚀 **Optional:** Learners may create all three measures if time permits. The main objective is to understand the pattern, not memorize every function.
+
+> 🖼️ **Image Placeholder S06-01:** Simple visual showing Production Quantity with MTD, QTD, and Calendar YTD under a selected Date range.  
+> **Planned file:** `images/S06_01_Time_Intelligence.png`
 
 ---
 
@@ -254,16 +256,14 @@ Use Date/Month filters and confirm that each measure accumulates according to it
 
 Nirvaan Pharma Ltd uses an **April–March fiscal year**.
 
-Use `DATESYTD()` with March 31 as the fiscal year end:
+Create:
 
 ```DAX
 Production Fiscal YTD =
-CALCULATE(
+TOTALYTD(
     [Production Quantity],
-    DATESYTD(
-        DimDate[Date],
-        "3/31"
-    )
+    DimDate[Date],
+    "3/31"
 )
 ```
 
@@ -274,59 +274,51 @@ CALCULATE(
 
 ### ✅ Validation
 
-Compare:
+Use:
 
-- `[Production Calendar YTD]`
+- Fiscal Year slicer
+- Date/Month visual
+- `[Production Quantity]`
 - `[Production Fiscal YTD]`
 
-around March and April.
+Observe how Fiscal YTD accumulates from April onward.
 
 ---
 
 ## 💻 6. Production Plan Measure
 
+### Business Question
+
+> How much production was planned?
+
 Create:
 
 ```DAX
 Planned Production =
-SUM(
-    FactProductionPlan[PlannedProductionUnits]
-)
+SUM(FactProductionPlan[PlannedProductionUnits])
 ```
 
 ### 💡 Grain Reminder
 
 `FactProductionPlan` is monthly planning data.
 
-Use:
+Therefore, compare Plan vs Actual using:
 
-- Month
-- Fiscal Month
+- Month / Fiscal Month
 - Product
 - Plant
 
-for meaningful Plan vs Actual analysis.
+⚠️ Avoid comparing daily production directly with a monthly plan.
 
 ---
 
-## 💻 7. Plan vs Actual
+## 💻 7. Production Plan vs Actual
 
 ### Production Variance
 
 ```DAX
 Production Variance =
 [Production Quantity] - [Planned Production]
-```
-
-### Production Variance %
-
-```DAX
-Production Variance % =
-DIVIDE(
-    [Production Variance],
-    [Planned Production],
-    0
-)
 ```
 
 ### Plan Attainment %
@@ -340,107 +332,35 @@ DIVIDE(
 )
 ```
 
+### 💡 Interpretation
+
+- Positive Variance → Actual is above Plan.
+- Negative Variance → Actual is below Plan.
+- Attainment = `1.00` or `100%` → Plan achieved exactly.
+- Attainment > `100%` → Plan exceeded.
+- Attainment < `100%` → Plan not fully achieved.
+
 ### Suggested Visual
 
-Use a matrix or combo chart with:
+Use a **Matrix or Combo Chart** with:
 
-- `DimDate[FiscalYearMonth]`
+- Fiscal Month
 - `[Production Quantity]`
 - `[Planned Production]`
 - `[Production Variance]`
 - `[Plan Attainment %]`
 
-Apply Product and Plant slicers.
+Add:
 
-> 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual visual showing actual production, planned production, variance, and attainment %.  
+- Product slicer
+- Plant slicer
+
+> 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual visual showing Actual, Plan, Variance, and Plan Attainment %.  
 > **Planned file:** `images/S06_02_Plan_vs_Actual.png`
 
 ---
 
-## 💻 8. Product Ranking with RANKX
-
-Create:
-
-```DAX
-Product Production Rank =
-RANKX(
-    ALL(
-        DimProduct[ProductName]
-    ),
-    [Production Quantity],
-    ,
-    DESC,
-    DENSE
-)
-```
-
-### 💡 Interpretation
-
-- `ALL(DimProduct[ProductName])` removes the current Product Name filter for ranking.
-- Plant, Date, and other external filters can still affect the measure.
-- `DESC` ranks the highest production as Rank 1.
-- `DENSE` avoids gaps in rank values after ties.
-
-### ✅ Validation
-
-Create a table with:
-
-- Product Name
-- Production Quantity
-- Product Production Rank
-
-Then apply Plant and Date slicers.
-
----
-
-## 🧑‍🏫 9. Dynamic Measure Selection
-
-Create a small disconnected table using **Enter Data**:
-
-### `Metric Selector`
-
-| Metric |
-|---|
-| Production Quantity |
-| Good Quantity |
-| Rejected Quantity |
-| Yield % |
-
-Do **not** create a relationship from this table.
-
-### Selected Metric
-
-```DAX
-Selected Metric =
-SELECTEDVALUE(
-    'Metric Selector'[Metric],
-    "Production Quantity"
-)
-```
-
-### Dynamic KPI
-
-```DAX
-Dynamic KPI =
-SWITCH(
-    [Selected Metric],
-    "Production Quantity", [Production Quantity],
-    "Good Quantity", [Good Quantity],
-    "Rejected Quantity", [Rejected Quantity],
-    "Yield %", [Yield %],
-    [Production Quantity]
-)
-```
-
-### ✅ Outcome
-
-A slicer based on `Metric Selector[Metric]` can control which KPI the measure returns.
-
-> 💡 Field Parameters provide another native approach and will be covered later under advanced reporting.
-
----
-
-## 💻 10. Using an Inactive Relationship
+## 💻 8. Using an Inactive Relationship
 
 Section 04 created:
 
@@ -450,9 +370,13 @@ DimDate[DateKey]
    └── ⚪ Inactive → FactProduction[ReleaseDateKey]
 ```
 
-A normal Date slicer therefore filters Production by **Manufacture Date**.
+A normal Date filter therefore uses **Manufacture Date**.
 
-### Production by Release Date
+### Business Question
+
+> How much production should be analyzed by Release Date instead?
+
+Create:
 
 ```DAX
 Released Production =
@@ -467,88 +391,77 @@ CALCULATE(
 
 ### 💡 Interpretation
 
-`USERELATIONSHIP()` tells this calculation to use the inactive **Release Date** relationship.
+`USERELATIONSHIP()` tells **this measure only** to use the inactive Release Date relationship.
 
-It does **not** permanently change the model relationship.
+It does **not** permanently change the semantic model.
 
-### Compare
+### ✅ Validation
 
-Create a visual containing:
+Create a simple visual containing:
 
 - Date / Month
 - `[Production Quantity]`
 - `[Released Production]`
 
-The two measures can differ because they use different business-date roles.
+The values may differ because the measures use different business-date roles.
 
-> 🖼️ **Image Placeholder S06-03:** Visual comparing Production by Manufacture Date vs Production by Release Date using `USERELATIONSHIP()`.  
-> **Planned file:** `images/S06_03_USERELATIONSHIP_Comparison.png`
-
----
-
-## 💻 11. Optional Expiry-Date Example
-
-If time permits:
-
-```DAX
-Production by Expiry Date =
-CALCULATE(
-    [Production Quantity],
-    USERELATIONSHIP(
-        DimDate[DateKey],
-        FactProduction[ExpiryDateKey]
-    )
-)
-```
-
-🚀 Use this only as a short extension of the Release Date example.
+> 🖼️ **Image Placeholder S06-03:** Comparison of Production by Manufacture Date and Release Date using `USERELATIONSHIP()`.  
+> **Planned file:** `images/S06_03_USERELATIONSHIP.png`
 
 ---
 
-## 💻 12. Advanced Validation
+## 💻 9. Simple Validation Page
 
-Create a report page containing:
+Create one compact report page.
 
 ### Slicers
 
-- `DimDate[FiscalYear]`
 - `DimPlant[PlantName]`
 - `DimProduct[ProductName]`
+- `DimDate[Date]`
 
-### Visual 1 — Time Trend
+### Visual 1 — Current vs Previous Period
 
-- Fiscal Month
-- Production Quantity
-- Previous Month
-- Previous Year
+- `[Production Quantity]`
+- `[Production Previous Month]`
+- `[Production Previous Year]`
 
 ### Visual 2 — Plan vs Actual
 
-- Planned Production
-- Production Quantity
-- Production Variance
-- Plan Attainment %
+- `[Production Quantity]`
+- `[Planned Production]`
+- `[Production Variance]`
+- `[Plan Attainment %]`
 
-### Visual 3 — Ranking
+### Visual 3 — Date Role
 
-- Product
-- Production Quantity
-- Product Production Rank
-
-### Visual 4 — Relationship Role
-
-- Production Quantity by Manufacture Date
-- Released Production by Release Date
+- `[Production Quantity]`
+- `[Released Production]`
 
 ### ✅ Validation
 
 Confirm that:
 
-- ✅ Product and Plant filters affect relevant measures.
-- ✅ Date context drives time intelligence.
-- ✅ Fiscal YTD resets at the correct fiscal boundary.
-- ✅ Plan vs Actual is evaluated at compatible monthly grain.
-- ✅ `USERELATIONSHIP()` changes only the selected calculation.
+- ✅ Product and Plant slicers filter the measures correctly.
+- ✅ Previous Month and Previous Year respond to Date selection.
+- ✅ Plan vs Actual is compared at monthly grain.
+- ✅ Fiscal YTD follows the April–March fiscal year.
+- ✅ `USERELATIONSHIP()` affects only `[Released Production]`.
+
+---
+
+## 🚀 10. Optional Topics — Mention Only
+
+If time permits, briefly mention:
+
+- `RANKX()` → ranking products or plants
+- `SELECTEDVALUE()` → reading one selected value
+- `SWITCH()` → dynamic calculation selection
+- Field Parameters → dynamic report interaction
+
+⚠️ Do not make these mandatory hands-on exercises in this session.
+
+They will fit better in the later **Advanced Reporting and Interactivity** session.
 
 ---
 
@@ -557,35 +470,33 @@ Confirm that:
 Learners should:
 
 1. 💻 Create `[Production Previous Month]`.
-2. 💻 Create `[Production MoM %]`.
+2. 💻 Create `[Production MoM Variance]`.
 3. 💻 Create `[Production Previous Year]`.
-4. 💻 Create `[Production YoY %]`.
-5. 💻 Create `[Production MTD]`.
-6. 💻 Create `[Production Fiscal YTD]`.
-7. 💻 Create `[Planned Production]`.
-8. 💻 Create `[Production Variance]`.
-9. 💻 Create `[Plan Attainment %]`.
-10. 💻 Create `[Product Production Rank]`.
-11. 💻 Create `[Released Production]` using `USERELATIONSHIP()`.
-12. 💻 Validate all measures with Date, Product, and Plant filters.
+4. 💻 Create `[Production Fiscal YTD]`.
+5. 💻 Create `[Planned Production]`.
+6. 💻 Create `[Production Variance]`.
+7. 💻 Create `[Plan Attainment %]`.
+8. 💻 Create `[Released Production]` using `USERELATIONSHIP()`.
+9. 💻 Validate the measures using Date, Product, and Plant filters.
 
 ### ✅ Expected Outcome
 
-Learners can build advanced, filter-aware DAX measures for time trends, plan-vs-actual analysis, ranking, and alternative Date relationships.
+Learners can create understandable advanced DAX measures for **previous-period analysis, fiscal reporting, Plan vs Actual, and inactive relationships** without using unnecessarily complex formulas.
 
 ---
 
 ## 💡 Trainer Guidelines
 
+- 💡 Use **one business question → one short formula → one validation visual**.
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
-- 💡 Validate calculations using simple tables before creating complex visuals.
-- 💡 Use fiscal fields for April–March reporting.
+- 💡 Start Previous Month / Previous Year with a simple **Date slicer** rather than a complex fiscal Matrix.
 - 💡 Explain monthly grain before Plan vs Actual.
-- 💡 Reinforce that `USERELATIONSHIP()` affects only the current DAX calculation.
-- 💡 Keep the Dynamic KPI example simple; deeper dynamic reporting comes later.
-- ⚠️ Do not mix daily production with monthly plan without a compatible Month context.
-- ⚠️ Do not create additional active Date relationships to solve a measure problem.
+- 💡 Keep MTD/QTD as short patterns; do not over-explain them.
+- 💡 Reinforce that `USERELATIONSHIP()` affects only the current measure.
+- ⚠️ Do not introduce long `VAR + FILTER + REMOVEFILTERS` troubleshooting patterns to learners.
+- ⚠️ Do not mix daily production with monthly planning data.
+- ⚠️ Do not create additional active Date relationships to solve a DAX problem.
 
 ---
 
@@ -593,14 +504,12 @@ Learners can build advanced, filter-aware DAX measures for time trends, plan-vs-
 
 Learners should now understand:
 
-- 🔁 Previous-month and previous-year analysis.
-- 🔁 MTD, QTD, Calendar YTD, and Fiscal YTD.
+- 🔁 Previous Month and Previous Year comparisons.
+- 🔁 MTD, QTD, Calendar YTD, and Fiscal YTD concepts.
 - 🔁 Production Plan vs Actual.
-- 🔁 Variance and attainment measures.
-- 🔁 Product ranking with `RANKX()`.
-- 🔁 Simple dynamic KPI selection.
+- 🔁 Variance and Plan Attainment %.
 - 🔁 Practical use of `USERELATIONSHIP()`.
-- 🔁 Validation of advanced measures under slicers and relationships.
+- 🔁 Why simple DAX and correct visual context should be taught together.
 
 ---
 
@@ -618,13 +527,13 @@ D. At least ten report pages <br>
 
 **Answer: A. A proper Date table and valid Date relationships**
 
-**Explanation:** Time-intelligence functions depend on a reliable Date dimension and appropriate filter relationships.
+**Explanation:** Time-intelligence calculations depend on a reliable Date dimension and correctly configured relationships.
 
 </details>
 
-### 🔴 Q2. Which function can shift the current Date context by one month?
+### 🔴 Q2. Which function is used in this section to calculate production for the previous month?
 
-A. `DATEADD()` <br>
+A. `PREVIOUSMONTH()` <br>
 B. `COUNTROWS()` <br>
 C. `FORMAT()` <br>
 D. `RELATED()` <br>
@@ -632,32 +541,32 @@ D. `RELATED()` <br>
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: A. `DATEADD()`**
+**Answer: A. `PREVIOUSMONTH()`**
 
-**Explanation:** `DATEADD()` shifts a Date context forward or backward by a specified interval.
+**Explanation:** `PREVIOUSMONTH()` returns the Date period for the month immediately before the current Date context.
 
 </details>
 
-### 🔴 Q3. Which function is commonly used to compare the same period in the previous year?
+### 🔴 Q3. Which function compares the corresponding period one year earlier?
 
 A. `SAMEPERIODLASTYEAR()` <br>
 B. `SUMX()` <br>
-C. `SELECTEDVALUE()` <br>
-D. `DISTINCTCOUNT()` <br>
+C. `DISTINCTCOUNT()` <br>
+D. `FILTER()` <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
 **Answer: A. `SAMEPERIODLASTYEAR()`**
 
-**Explanation:** `SAMEPERIODLASTYEAR()` returns the corresponding Date period one year earlier.
+**Explanation:** `SAMEPERIODLASTYEAR()` shifts the current Date context to the corresponding period in the previous year.
 
 </details>
 
 ### 🔴 Q4. What does `TOTALMTD()` calculate?
 
 A. Month-to-date value <br>
-B. Maximum value in the model <br>
+B. Maximum value in a table <br>
 C. Monthly row count only <br>
 D. Model-table dependencies <br>
 
@@ -666,39 +575,39 @@ D. Model-table dependencies <br>
 
 **Answer: A. Month-to-date value**
 
-**Explanation:** `TOTALMTD()` evaluates an expression over the dates from the start of the current month through the current Date context.
+**Explanation:** `TOTALMTD()` evaluates a measure from the beginning of the current month through the current Date context.
 
 </details>
 
-### 🔴 Q5. Why does the Fiscal YTD example use March 31 as year end?
+### 🔴 Q5. Why does the Fiscal YTD formula use `"3/31"`?
 
-A. Nirvaan Pharma Ltd uses an April–March fiscal calendar <br>
-B. Power BI only supports March year ends <br>
-C. It is required by `SUM()` <br>
+A. The fiscal year ends on March 31 <br>
+B. Power BI requires every year to end in March <br>
+C. `SUM()` only works in March <br>
 D. It disables Date filtering <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: A. Nirvaan Pharma Ltd uses an April–March fiscal calendar**
+**Answer: A. The fiscal year ends on March 31**
 
-**Explanation:** A fiscal year beginning in April ends on March 31, so Fiscal YTD must reset after that date.
+**Explanation:** An April–March fiscal year ends on March 31, so Fiscal YTD should reset after that date.
 
 </details>
 
-### 🔴 Q6. Which measure represents the difference between actual and planned production?
+### 🔴 Q6. Which measure represents Actual Production minus Planned Production?
 
-A. `[Production Quantity] - [Planned Production]` <br>
-B. `[Production Quantity] + [Planned Production]` <br>
-C. `COUNTROWS(DimDate)` <br>
-D. `MAX(DimPlant[PlantName])` <br>
+A. `[Production Variance]` <br>
+B. `[Batch Count]` <br>
+C. `[Production Previous Month]` <br>
+D. `[Yield %]` <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: A. `[Production Quantity] - [Planned Production]`**
+**Answer: A. `[Production Variance]`**
 
-**Explanation:** Variance is calculated by subtracting the planned amount from the actual amount.
+**Explanation:** Production Variance measures the difference between actual production and planned production.
 
 </details>
 
@@ -707,70 +616,38 @@ D. `MAX(DimPlant[PlantName])` <br>
 A. Actual production relative to planned production <br>
 B. Number of Date rows <br>
 C. Number of relationships <br>
-D. Average Product Name <br>
+D. Number of products only <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
 **Answer: A. Actual production relative to planned production**
 
-**Explanation:** Plan Attainment % is the ratio of actual production to planned production.
+**Explanation:** Plan Attainment % is calculated as Actual Production divided by Planned Production.
 
 </details>
 
-### 🔴 Q8. Which function is used to rank products by production?
+### 🔴 Q8. Why should Production Plan vs Actual normally be compared at Month level?
 
-A. `RANKX()` <br>
-B. `FILTER()` <br>
-C. `DATEADD()` <br>
-D. `FORMAT()` <br>
+A. The production plan is stored at monthly grain <br>
+B. Production data has no dates <br>
+C. DAX cannot calculate daily values <br>
+D. Month names automatically create relationships <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: A. `RANKX()`**
+**Answer: A. The production plan is stored at monthly grain**
 
-**Explanation:** `RANKX()` evaluates an expression across a table and returns the rank of the current item.
-
-</details>
-
-### 🔴 Q9. What does `SELECTEDVALUE()` typically return?
-
-A. The single selected value when one value is in context <br>
-B. Every row from a table <br>
-C. A new relationship <br>
-D. The total number of report pages <br>
-
-<details>
-<summary><b>Answer & Explanation</b></summary>
-
-**Answer: A. The single selected value when one value is in context**
-
-**Explanation:** `SELECTEDVALUE()` is useful when a slicer or filter should drive a dynamic calculation.
+**Explanation:** Comparing data at compatible levels of detail prevents misleading Plan vs Actual results.
 
 </details>
 
-### 🔴 Q10. What is the purpose of `SWITCH()` in the Dynamic KPI example?
-
-A. Return different measures based on the selected metric <br>
-B. Create a database connection <br>
-C. Change Power Query data types <br>
-D. Activate every relationship <br>
-
-<details>
-<summary><b>Answer & Explanation</b></summary>
-
-**Answer: A. Return different measures based on the selected metric**
-
-**Explanation:** `SWITCH()` maps the selected metric to the appropriate DAX measure.
-
-</details>
-
-### 🔴 Q11. What does `USERELATIONSHIP()` do?
+### 🔴 Q9. What does `USERELATIONSHIP()` do?
 
 A. Uses a specified inactive relationship for the current calculation <br>
 B. Permanently activates every relationship <br>
-C. Deletes the active relationship <br>
+C. Deletes an active relationship <br>
 D. Creates a new table <br>
 
 <details>
@@ -778,23 +655,55 @@ D. Creates a new table <br>
 
 **Answer: A. Uses a specified inactive relationship for the current calculation**
 
-**Explanation:** `USERELATIONSHIP()` allows a measure to evaluate using an alternative relationship without permanently changing the model.
+**Explanation:** `USERELATIONSHIP()` allows a measure to use an alternative relationship without permanently changing the model.
 
 </details>
 
-### 🔴 Q12. Why should Production Plan vs Actual usually be compared at Month level?
+### 🔴 Q10. In the example, which Date relationship is active by default for `FactProduction`?
 
-A. The plan table is stored at monthly planning grain <br>
-B. Production data contains no dates <br>
-C. DAX cannot calculate daily totals <br>
-D. Month names automatically create relationships <br>
+A. Manufacture Date <br>
+B. Release Date <br>
+C. Expiry Date <br>
+D. No Date relationship <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: A. The plan table is stored at monthly planning grain**
+**Answer: A. Manufacture Date**
 
-**Explanation:** Comparing facts at compatible grain prevents misleading results and makes the plan-vs-actual comparison meaningful.
+**Explanation:** The active relationship connects `DimDate` to `FactProduction[ManufactureDateKey]`.
+
+</details>
+
+### 🔴 Q11. Why is `DIVIDE()` used for Plan Attainment %?
+
+A. It handles zero or blank denominators safely <br>
+B. It creates a Date table <br>
+C. It changes relationship direction <br>
+D. It imports data <br>
+
+<details>
+<summary><b>Answer & Explanation</b></summary>
+
+**Answer: A. It handles zero or blank denominators safely**
+
+**Explanation:** `DIVIDE()` provides safer ratio calculations when Planned Production may be zero or blank.
+
+</details>
+
+### 🔴 Q12. What is the recommended teaching approach for advanced DAX in this session?
+
+A. One business question, one short formula, and one validation visual <br>
+B. Memorize as many DAX functions as possible <br>
+C. Use only long formulas <br>
+D. Avoid visual validation <br>
+
+<details>
+<summary><b>Answer & Explanation</b></summary>
+
+**Answer: A. One business question, one short formula, and one validation visual**
+
+**Explanation:** Short, purposeful DAX examples are easier to understand, demonstrate, and validate during training.
 
 </details>
 
