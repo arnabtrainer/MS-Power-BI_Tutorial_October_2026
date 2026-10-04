@@ -90,7 +90,7 @@ Power Query is the data-preparation layer used to connect, inspect, clean, resha
 
 ---
 
-<img width="1624" height="969" alt="image" src="https://github.com/user-attachments/assets/451e4256-c3bd-4105-b341-97a0ab6c08b7" />
+<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/451e4256-c3bd-4105-b341-97a0ab6c08b7" />
 
 ---
 
@@ -135,8 +135,11 @@ Use these tools to inspect:
 - 📚 Distinct and unique values
 - 📚 Value distribution
 
-> 🖼️ **Image Placeholder S02-02:** Column Quality, Column Distribution and Column Profile enabled for the HR dataset.  
-> **Planned file:** `images/S02_02_Data_Profiling.png`
+---
+
+<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/6403e8fc-5e66-4396-add9-7a57546e456e" />
+
+---
 
 > ⚠️ **Trainer Note:** If profiling is based on the top 1,000 rows, switch to profiling the **entire dataset** before drawing conclusions.
 
@@ -322,9 +325,6 @@ Demonstrate:
 - 🛠️ Deleting a step
 - 🛠️ Editing an existing step
 - 🛠️ Understanding why later steps may depend on earlier steps
-
-> 🖼️ **Image Placeholder S02-03:** Query Settings showing a clean sequence of **Applied Steps** for the HR dataset.  
-> **Planned file:** `images/S02_03_Applied_Steps.png`
 
 ---
 
