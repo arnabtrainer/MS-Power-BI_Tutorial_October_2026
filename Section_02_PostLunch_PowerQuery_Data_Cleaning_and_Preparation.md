@@ -2,7 +2,7 @@
 
 **Day:** 1 — Post-Lunch  
 **Duration:** 3 Hours  
-**Case Company:** **Nirvaan Pharma Ltd** *(fictitious training company)*
+**Case Company:** **Nirvaan Pharma Ltd** *(fictitious pharma company)*
 
 ---
 
