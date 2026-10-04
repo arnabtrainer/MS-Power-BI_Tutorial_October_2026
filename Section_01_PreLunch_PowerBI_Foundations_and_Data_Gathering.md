@@ -114,8 +114,9 @@ Show:
 - 🧑‍🏫 Model View
 - 🧑‍🏫 **Transform Data** → Power Query Editor
 
-> 🖼️ **Image Placeholder S01-01:** Power BI Desktop with **Get Data**, **Enter Data**, Report View, Data View and Model View highlighted.  
-> **Planned file:** `images/S01_01_PowerBI_Desktop_Interface.png`
+---
+
+<img width="1625" height="968" alt="image" src="https://github.com/user-attachments/assets/b0f92bac-a453-4345-9aea-109dbdd00e04" />
 
 ---
 
@@ -137,9 +138,6 @@ Show:
 
 ⚠️ **Use Enter Data only for small and relatively static tables.** Do not use it as a replacement for large or frequently changing source systems.
 
-> 🖼️ **Image Placeholder S01-02:** Enter Data window with the sample plant lookup table.  
-> **Planned file:** `images/S01_02_Enter_Data.png`
-
 ---
 
 ## 🧑‍🏫 3. Get Data, Navigator and Load Options
@@ -151,9 +149,6 @@ Demonstrate:
 - 🛠️ Previewing tables/sheets in **Navigator**.
 - 🛠️ **Load** versus **Transform Data**.
 - 🛠️ Checking headers, delimiters and detected data types.
-
-> 🖼️ **Image Placeholder S01-03:** Navigator showing source preview and **Load / Transform Data**.  
-> **Planned file:** `images/S01_03_Navigator_Load_Transform.png`
 
 ---
 
@@ -186,9 +181,6 @@ Demonstrate:
 - 🛠️ **Path:** Home → Get Data → JSON
 - 🧑‍🏫 Show List/Record structures and expand them into columns.
 - ✅ **Outcome:** Understand basic semi-structured data expansion.
-
-> 🖼️ **Image Placeholder S01-04:** JSON List/Record structure before and after expansion.  
-> **Planned file:** `images/S01_04_JSON_Expansion.png`
 
 ### Demo 5 — XML
 
@@ -249,9 +241,6 @@ Demonstrate:
 - 🧑‍🏫 Inspect available tables and select suitable tabular content.
 - ✅ **Outcome:** Reinforce web-table acquisition using another public portal.
 
-> 🖼️ **Image Placeholder S01-05:** Web Navigator showing detected tables from a public web page.  
-> **Planned file:** `images/S01_05_Web_Navigator.png`
-
 ---
 
 ## 💻 6. Folder Import
@@ -263,9 +252,6 @@ Demonstrate:
 - 💡 Explain that files being combined should have compatible structures.
 - ✅ **Outcome:** Understand scalable ingestion of recurring files.
 
-> 🖼️ **Image Placeholder S01-06:** Folder connector showing multiple files and **Combine & Transform Data**.  
-> **Planned file:** `images/S01_06_Folder_Combine.png`
-
 ---
 
 ## 🗂️ 7. Nirvaan Pharma Ltd Dataset Preview
@@ -276,9 +262,6 @@ Demonstrate:
 - 📚 Briefly identify examples such as Product, Plant, Batch, Production, Inventory and Quality.
 - ⚠️ Do **not** build relationships or measures yet.
 - ✅ **Outcome:** Learners recognize the main pharmaceutical case-study dataset that will be used progressively later.
-
-> 🖼️ **Image Placeholder S01-07:** Navigator showing selected `NirvaanPharma_DW.xlsx` tables.  
-> **Planned file:** `images/S01_07_NirvaanPharma_Navigator.png`
 
 ---
 
@@ -332,7 +315,7 @@ Learners should now understand:
 
 ## 📝 Knowledge Check — 12 MCQs
 
-### Q1. What is the main purpose of Power BI's Get Data feature?
+### 🔴 Q1. What is the main purpose of Power BI's Get Data feature?
 
 A. To create operating system users <br>
 B. To connect Power BI to external data sources <br>
@@ -348,7 +331,7 @@ D. To install database servers <br>
 
 </details>
 
-### Q2. When is the Enter Data utility most appropriate?
+### 🔴 Q2. When is the Enter Data utility most appropriate?
 
 A. For loading millions of frequently changing records <br>
 B. For creating small manually maintained tables <br>
@@ -364,7 +347,7 @@ D. For connecting to web portals <br>
 
 </details>
 
-### Q3. Which Power BI connector is normally used for a `.csv` file?
+### 🔴 Q3. Which Power BI connector is normally used for a `.csv` file?
 
 A. XML <br>
 B. Text/CSV <br>
@@ -380,7 +363,7 @@ D. Access Database <br>
 
 </details>
 
-### Q4. Which connector can also be used for a `.tsv` file?
+### 🔴 Q4. Which connector can also be used for a `.tsv` file?
 
 A. Text/CSV <br>
 B. Excel Workbook <br>
@@ -396,7 +379,7 @@ D. SQL Server <br>
 
 </details>
 
-### Q5. Why may JSON data require expansion after import?
+### 🔴 Q5. Why may JSON data require expansion after import?
 
 A. JSON frequently contains nested Lists and Records <br>
 B. JSON always contains images <br>
@@ -412,7 +395,7 @@ D. JSON can only contain one column <br>
 
 </details>
 
-### Q6. Which file is used for the XML demonstration in this session?
+### 🔴 Q6. Which file is used for the XML demonstration in this session?
 
 A. `iris.xml` <br>
 B. `food.xml` <br>
@@ -428,7 +411,7 @@ D. `MyEmployee.xml` <br>
 
 </details>
 
-### Q7. What should be checked carefully after importing a PDF?
+### 🔴 Q7. What should be checked carefully after importing a PDF?
 
 A. Monitor brightness <br>
 B. Extracted rows, columns and table structure <br>
@@ -444,7 +427,7 @@ D. Keyboard settings <br>
 
 </details>
 
-### Q8. What does the Navigator window primarily help users do?
+### 🔴 Q8. What does the Navigator window primarily help users do?
 
 A. Install Power BI <br>
 B. Preview and select available tables or objects <br>
@@ -460,7 +443,7 @@ D. Write DAX measures automatically <br>
 
 </details>
 
-### Q9. What is the main difference between Load and Transform Data?
+### 🔴 Q9. What is the main difference between Load and Transform Data?
 
 A. Load imports the selected data directly, while Transform Data opens Power Query first <br>
 B. Load deletes data, while Transform Data restores it <br>
@@ -476,7 +459,7 @@ D. There is no difference <br>
 
 </details>
 
-### Q10. What is the main advantage of the Folder connector?
+### 🔴 Q10. What is the main advantage of the Folder connector?
 
 A. It changes the Windows desktop theme <br>
 B. It can combine multiple similarly structured files <br>
@@ -492,7 +475,7 @@ D. It converts DAX to SQL <br>
 
 </details>
 
-### Q11. Which method can be used to access a PDF directly from a web URL?
+### 🔴 Q11. Which method can be used to access a PDF directly from a web URL?
 
 A. Home → Enter Data <br>
 B. Home → Get Data → Web <br>
@@ -508,7 +491,7 @@ D. Home → Publish <br>
 
 </details>
 
-### Q12. What should you consider first when selecting a data connector in Power BI?
+### 🔴 Q12. What should you consider first when selecting a data connector in Power BI?
 
 A. The color theme of the report <br>
 B. The type and location of the data source <br>
