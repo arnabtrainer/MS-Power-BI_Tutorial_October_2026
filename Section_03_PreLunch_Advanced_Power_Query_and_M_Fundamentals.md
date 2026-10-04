@@ -98,9 +98,6 @@ By the end of this session, learners should be able to:
 - 💡 **Append = More Rows**
 - 💡 **Merge = More Columns**
 
-> 🖼️ **Image Placeholder S03-01:** Compact diagram showing **Append = vertical combination** and **Merge = key-based horizontal combination**.  
-> **Planned file:** `images/S03_01_Append_vs_Merge.png`
-
 ---
 
 ## 💻 2. Append Queries
@@ -180,9 +177,6 @@ Use this sheet to demonstrate what can happen when one source contains missing o
 
 Product records are enriched with matching discount information.
 
-> 🖼️ **Image Placeholder S03-02:** Merge dialog showing two tables, matching key columns, and **Join Kind** selection.  
-> **Planned file:** `images/S03_02_Merge_Queries_Dialog.png`
-
 ---
 
 ## 📚 5. Common Join Types
@@ -195,6 +189,12 @@ Product records are enriched with matching discount information.
 | **Inner** | Only matching rows |
 | **Left Anti** | Rows only in the first table |
 | **Right Anti** | Rows only in the second table |
+
+---
+
+<img width="972" height="463" alt="image" src="https://github.com/user-attachments/assets/c398f02c-1fdc-4693-b4a7-c18eb3d1a2f0" />
+
+---
 
 ### 💡 Practical Guidance
 
@@ -235,8 +235,9 @@ Use a suitable wide table from the practice workbook.
 
 A wide table becomes a tidy, scalable structure better suited to filtering and visualization.
 
-> 🖼️ **Image Placeholder S03-03:** Before/after example of a wide table transformed using **Unpivot**.  
-> **Planned file:** `images/S03_03_Unpivot_Before_After.png`
+---
+
+<img width="1893" height="448" alt="image" src="https://github.com/user-attachments/assets/4a5f5b3b-3396-467f-83ac-80644b31b3b2" />
 
 ---
 
@@ -300,9 +301,6 @@ Explain:
 - 📚 Referenced queries
 - 📚 Helper queries
 - 📚 Dependency flow
-
-> 🖼️ **Image Placeholder S03-04:** Query Dependencies view showing source and dependent queries.  
-> **Planned file:** `images/S03_04_Query_Dependencies.png`
 
 ### ✅ Outcome
 
@@ -376,8 +374,9 @@ in
 - 🧮 `each [Qty] > 0` represents the filter condition.
 - 🧮 The `in` statement returns the final step.
 
-> 🖼️ **Image Placeholder S03-05:** Advanced Editor showing the `let … in` structure and highlighted step names.  
-> **Planned file:** `images/S03_05_M_Advanced_Editor.png`
+---
+
+<img width="1000" height="700" alt="image" src="https://github.com/user-attachments/assets/2587f35e-558e-4d6e-9f2b-8ca378e75f2f" />
 
 ---
 
