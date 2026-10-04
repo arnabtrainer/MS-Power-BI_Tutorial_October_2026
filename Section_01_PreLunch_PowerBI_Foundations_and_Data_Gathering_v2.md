@@ -508,19 +508,19 @@ D. Home → Publish <br>
 
 </details>
 
-### Q12. Why is `NirvaanPharma_DW.xlsx` only previewed in Section 1?
+### Q12. What should you consider first when selecting a data connector in Power BI?
 
-A. It is not an Excel workbook <br>
-B. Detailed modelling and analytics are covered in later sessions <br>
-C. Power BI cannot read it <br>
-D. It contains no tables <br>
+A. The color theme of the report <br>
+B. The type and location of the data source <br>
+C. The number of visuals on the report page <br>
+D. The size of the Power BI logo <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: B. Detailed modelling and analytics are covered in later sessions**
+**Answer: B. The type and location of the data source**
 
-**Explanation:** Section 1 focuses on data gathering. The Nirvaan Pharma Ltd dataset is introduced here and used more deeply in later modelling and analytics sessions.
+**Explanation:** The correct connector depends mainly on where the data is stored and in what format, such as Excel, CSV, database, folder, PDF, or web source.
 
 </details>
 
