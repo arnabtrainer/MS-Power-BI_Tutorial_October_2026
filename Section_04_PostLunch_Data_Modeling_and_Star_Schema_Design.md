@@ -187,7 +187,9 @@ Identify:
 
 ---
 
-<img width="1308" height="526" alt="image" src="https://github.com/user-attachments/assets/925b9e0d-4656-4904-850e-5359b52a6ab0" />
+<img width="1308" height="526" alt="Power BI Model View showing the Sales and Budget semantic model with dimension and fact table relationships" src="https://github.com/user-attachments/assets/925b9e0d-4656-4904-850e-5359b52a6ab0" />
+
+**Figure S04-01 — Sales/Budget Semantic Model: Fact–Dimension Relationships**
 
 ---
 
@@ -215,7 +217,9 @@ DimProduct — Fact Table — DimPlant
 
 ---
 
-<img width="997" height="600" alt="image" src="https://github.com/user-attachments/assets/02f28b62-3afc-40b0-a49e-5254ee3625de" />
+<img width="997" height="600" alt="Star schema diagram showing a central fact table surrounded by dimension tables" src="https://github.com/user-attachments/assets/02f28b62-3afc-40b0-a49e-5254ee3625de" />
+
+**Figure S04-02 — Star Schema Concept: Fact Table Surrounded by Dimensions**
 
 ---
 
@@ -408,7 +412,9 @@ Examples:
 
 ---
 
-<img width="1512" height="742" alt="image" src="https://github.com/user-attachments/assets/b5b22141-6f20-4896-a5e5-18635594a7b6" />
+<img width="1512" height="742" alt="Nirvaan Pharma Ltd Power BI semantic model showing recommended dimension-to-fact relationships" src="https://github.com/user-attachments/assets/b5b22141-6f20-4896-a5e5-18635594a7b6" />
+
+**Figure S04-03 — Nirvaan Pharma Ltd Core Semantic Model: Recommended Relationships**
 
 ---
 
