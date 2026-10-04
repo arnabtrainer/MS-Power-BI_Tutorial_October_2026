@@ -54,6 +54,10 @@ For this session, focus mainly on:
 
 > 💡 Other fact tables such as Quality, Downtime, Inventory Movement, and Deviations will be used progressively in later analytics sessions.
 
+### Reference for Active/Inactive Relationships
+
+- 🌐 [Microsoft Learn — Active vs inactive relationship guidance](https://learn.microsoft.com/en-us/power-bi/guidance/relationships-active-inactive)
+
 ---
 
 ## 📚 Data Modeling Coverage
@@ -363,6 +367,43 @@ Load the selected tables from:
 - 🛠️ Keep filter direction **single** unless a specific requirement justifies otherwise.
 - 🛠️ Arrange dimensions around facts for a readable star-schema layout.
 
+
+### 🔗 Recommended Relationship Wires
+
+Use **single-direction filtering from Dimension → Fact** for the following relationships.
+
+| From Table | From Column | To Table | To Column | Cardinality | Status | Filter Direction |
+|---|---|---|---|---|---|---|
+| `DimDate` | `DateKey` | `FactProduction` | `ManufactureDateKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimDate` | `DateKey` | `FactProduction` | `ReleaseDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
+| `DimDate` | `DateKey` | `FactProduction` | `ExpiryDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
+| `DimDate` | `DateKey` | `FactProductionPlan` | `PlanMonthDateKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimDate` | `DateKey` | `FactInventorySnapshot` | `SnapshotDateKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimDate` | `DateKey` | `FactInventorySnapshot` | `ExpiryDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
+| `DimProduct` | `ProductKey` | `FactProduction` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimProduct` | `ProductKey` | `FactProductionPlan` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimProduct` | `ProductKey` | `FactInventorySnapshot` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimPlant` | `PlantKey` | `FactProduction` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimPlant` | `PlantKey` | `FactProductionPlan` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimPlant` | `PlantKey` | `FactInventorySnapshot` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimBatch` | `BatchKey` | `FactProduction` | `BatchKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimBatch` | `BatchKey` | `FactInventorySnapshot` | `BatchKey` | 1 → * | ✅ Active | Dim → Fact |
+| `DimWarehouse` | `WarehouseKey` | `FactInventorySnapshot` | `WarehouseKey` | 1 → * | ✅ Active | Dim → Fact |
+
+### 💡 Filter Transmission Rule
+
+> **Dimension (1) → Fact (*)**, using **single-direction filtering** by default.
+
+Examples:
+
+- `DimProduct` should filter Production, Production Plan, and Inventory Snapshot.
+- `DimPlant` should filter all three selected fact tables.
+- `DimBatch` should filter Production and Inventory Snapshot, but **not** Production Plan.
+- `DimWarehouse` should filter **Inventory Snapshot only**.
+- `DimDate` should use the intended active business date for each fact.
+
+⚠️ Do not create extra Dimension-to-Dimension relationships merely because matching keys exist. They may create unnecessary or ambiguous filter paths.
+
 > 🖼️ **Image Placeholder S04-03:** Simplified Nirvaan Pharma Ltd semantic model showing Date, Product, Plant, Batch, Warehouse, Production, Plan, and Inventory Snapshot tables.  
 > **Planned file:** `images/S04_03_Nirvaan_Pharma_Model.png`
 
@@ -384,20 +425,60 @@ Examples:
 
 - production date
 - release date
+- expiry date
 - snapshot date
-- test date
 
 A single Date dimension may therefore play different roles.
 
 ### Teaching Concept
 
-- 📚 **Active relationship** — default filtering path.
-- 📚 **Inactive relationship** — alternative path retained for a different date role.
-- 📚 **Role-playing date dimension** — one date dimension used for multiple business meanings.
+- 📚 **Active relationship** — the default filter path used automatically.
+- 📚 **Inactive relationship** — an alternative relationship available for a different business meaning.
+- 📚 **Role-playing date dimension** — one Date dimension reused for multiple date roles.
 
-⚠️ Do not make multiple competing date relationships active when they create ambiguity.
+For `FactProduction`:
 
-💡 The DAX use of inactive relationships will be covered later.
+```text
+DimDate[DateKey]
+   ├── ✅ Active   → FactProduction[ManufactureDateKey]
+   ├── ⚪ Inactive → FactProduction[ReleaseDateKey]
+   └── ⚪ Inactive → FactProduction[ExpiryDateKey]
+```
+
+Therefore, a normal `DimDate` slicer filters Production by **Manufacture Date**.
+
+### 🧮 Using an Inactive Relationship in DAX
+
+The DAX function used to activate an inactive relationship **inside a calculation** is:
+
+`USERELATIONSHIP()`
+
+Example:
+
+```DAX
+Released Production =
+CALCULATE(
+    [Production Quantity],
+    USERELATIONSHIP(
+        DimDate[DateKey],
+        FactProduction[ReleaseDateKey]
+    )
+)
+```
+
+### 💡 What to Teach at This Stage
+
+- 💡 Explain **why** the inactive relationship exists.
+- 💡 Show the `USERELATIONSHIP()` syntax once.
+- 💡 Explain that it temporarily changes the relationship used by that measure.
+- ⚠️ Do not teach advanced DAX behavior here; detailed practice comes in the DAX sessions.
+- ⚠️ Do not make multiple competing date relationships active when they create ambiguity.
+
+### 🌐 Learn More
+
+Learners may refer to:
+
+[Microsoft Learn — Active vs inactive relationship guidance](https://learn.microsoft.com/en-us/power-bi/guidance/relationships-active-inactive)
 
 ---
 
@@ -436,11 +517,12 @@ Learners should:
 5. 💻 Load the selected Nirvaan Pharma Ltd tables.
 6. 💻 Identify the five core dimensions.
 7. 💻 Identify the three selected fact tables.
-8. 💻 Create required one-to-many relationships.
-9. 💻 Configure the Date table and month sorting.
-10. 💻 Create at least one hierarchy.
-11. 💻 Hide unnecessary technical keys.
-12. 💻 Arrange the model into a readable star-schema layout.
+8. 💻 Create the relationships according to the **Recommended Relationship Wires** table.
+9. 💻 Verify active and inactive Date relationships.
+10. 💻 Configure the Date table and month sorting.
+11. 💻 Create at least one hierarchy.
+12. 💻 Hide unnecessary technical keys.
+13. 💻 Arrange the model into a readable star-schema layout.
 
 ### ✅ Expected Outcome
 
@@ -456,6 +538,7 @@ A clean semantic model in which dimensions filter the appropriate fact tables th
 - 💡 Explain many-to-many as an exception, not a shortcut.
 - 💡 Use the simpler Sales/Budget model before the pharma model.
 - 💡 Introduce only the Nirvaan Pharma Ltd tables needed for this session.
+- 💡 Demonstrate `USERELATIONSHIP()` once to show how an inactive Date relationship can be used in a measure.
 - ⚠️ Do not build complex DAX measures yet.
 - ⚠️ Do not enable bidirectional filtering merely to fix a visual.
 - ⚠️ Validate slicer/filter behavior after creating relationships.
@@ -471,7 +554,7 @@ Learners should now understand:
 - 🔁 One-to-many relationships.
 - 🔁 Cardinality and filter direction.
 - 🔁 Date tables and hierarchies.
-- 🔁 Active/inactive relationship concepts.
+- 🔁 Active/inactive relationship concepts and the purpose of `USERELATIONSHIP()`.
 - 🔁 Basic semantic-model hygiene.
 
 ---
@@ -622,19 +705,19 @@ D. To convert months into measures <br>
 
 </details>
 
-### 🔴 Q10. What is an inactive relationship?
+### 🔴 Q10. Which DAX function can use an inactive relationship inside a calculation?
 
-A. A deleted relationship <br>
-B. An alternative relationship that is not the default filter path <br>
-C. A relationship with no columns <br>
-D. A relationship that only works in Excel <br>
+A. `SUM()` <br>
+B. `USERELATIONSHIP()` <br>
+C. `FORMAT()` <br>
+D. `COUNTROWS()` <br>
 
 <details>
 <summary><b>Answer & Explanation</b></summary>
 
-**Answer: B. An alternative relationship that is not the default filter path**
+**Answer: B. `USERELATIONSHIP()`**
 
-**Explanation:** Inactive relationships can represent alternative business roles such as another date field without becoming the default filtering path.
+**Explanation:** `USERELATIONSHIP()` tells a DAX calculation to use a specified inactive relationship for that calculation.
 
 </details>
 
