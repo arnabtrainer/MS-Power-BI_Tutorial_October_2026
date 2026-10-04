@@ -88,8 +88,11 @@ Power Query is the data-preparation layer used to connect, inspect, clean, resha
   - Query Settings
   - Applied Steps
 
-> 🖼️ **Image Placeholder S02-01:** Power Query Editor with **Queries**, **Data Preview**, **Query Settings**, and **Applied Steps** labelled.  
-> **Planned file:** `images/S02_01_PowerQuery_Editor_Interface.png`
+---
+
+<img width="1624" height="969" alt="image" src="https://github.com/user-attachments/assets/451e4256-c3bd-4105-b341-97a0ab6c08b7" />
+
+---
 
 ### 💡 Key Principle
 
