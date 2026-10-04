@@ -61,8 +61,8 @@ By the end of this session, learners should be able to:
 | 2 | Append with schema issue | `North1 (NULL)` | 🧑‍🏫 Demo |
 | 3 | Merge Queries | `Product` + `ProductDiscount` | 💻 Guided |
 | 4 | Join types | `JoinAppendTables.xlsx` | 🧑‍🏫 Demo |
-| 5 | Group By | Existing practice queries | 💻 Guided |
-| 6 | Pivot / Unpivot | Regional/sales-style tables | 💻 Guided |
+| 5 | Pivot / Unpivot | Regional/sales-style tables | 💻 Guided |
+| 6 | Group By | Existing practice queries | 💻 Guided |
 | 7 | Folder consolidation | `DataSources/IrisData/` | 💻 Guided |
 | 8 | Parameters | Reusable source/path concept | 🧑‍🏫 Demo |
 | 9 | Query Dependencies | Existing Power Query queries | 🧑‍🏫 Demo |
@@ -80,8 +80,8 @@ By the end of this session, learners should be able to:
 | 00:00–00:15 | 🔁 Review of Power Query and Applied Steps |
 | 00:15–00:45 | 💻 Append Queries |
 | 00:45–01:20 | 💻 Merge Queries and join types |
-| 01:20–01:40 | 💻 Group By and aggregations |
-| 01:40–02:00 | 💻 Pivot and Unpivot |
+| 01:20–01:40 | 💻 Pivot and Unpivot |
+| 01:40–02:00 | 💻 Group By and aggregations |
 | 02:00–02:20 | 💻 Folder consolidation |
 | 02:20–02:35 | 🧑‍🏫 Parameters and Query Dependencies |
 | 02:35–02:55 | 💻 M fundamentals and Advanced Editor |
@@ -211,35 +211,7 @@ Product records are enriched with matching discount information.
 
 ---
 
-## 💻 6. Group By and Aggregation
-
-**Group By** summarizes rows based on one or more selected columns.
-
-### Guided Steps
-
-- 🛠️ Select a suitable practice query such as `AllRegions`.
-- 🛠️ Choose **Transform → Group By**.
-- 🛠️ Start with **Basic** mode for one grouping column.
-- 🛠️ Use **Advanced** mode for multiple grouping columns or aggregations.
-- 🛠️ Demonstrate common operations:
-  - **Count Rows**
-  - **Sum**
-  - **Average**
-  - **Minimum**
-  - **Maximum**
-
-### 💡 Teaching Point
-
-**Group By changes the grain of the result.**  
-After grouping, the table contains one row per selected grouping combination instead of one row per original transaction.
-
-### ✅ Outcome
-
-Learners can create summarized tables for category-, region-, product-, or other business-level analysis.
-
----
-
-## 💻 7. Pivot and Unpivot
+## 💻 6. Pivot and Unpivot
 
 ### 📚 Pivot
 
@@ -274,6 +246,33 @@ A wide table becomes a tidy, scalable structure better suited to filtering and v
 
 **Figure S03-02 — Power Query Reshaping: Pivot and Unpivot**
 
+---
+
+## 💻 7. Group By and Aggregation
+
+**Group By** summarizes rows based on one or more selected columns.
+
+### Guided Steps
+
+- 🛠️ Select a suitable practice query such as `AllRegions`.
+- 🛠️ Choose **Transform → Group By**.
+- 🛠️ Start with **Basic** mode for one grouping column.
+- 🛠️ Use **Advanced** mode for multiple grouping columns or aggregations.
+- 🛠️ Demonstrate common operations:
+  - **Count Rows**
+  - **Sum**
+  - **Average**
+  - **Minimum**
+  - **Maximum**
+
+### 💡 Teaching Point
+
+**Group By changes the grain of the result.**  
+After grouping, the table contains one row per selected grouping combination instead of one row per original transaction.
+
+### ✅ Outcome
+
+Learners can create summarized tables for category-, region-, product-, or other business-level analysis.
 ---
 
 ## 💻 8. Folder-Based Consolidation
@@ -439,8 +438,8 @@ Learners should complete the following:
 2. 💻 Rename the result `AllRegions`.
 3. 💻 Merge `Product` with `ProductDiscount`.
 4. 💻 Use a **Left Outer** join.
-5. 💻 Apply **Group By** using one suitable categorical field and at least two aggregations.
-6. 💻 Perform one **Unpivot** operation.
+5. 💻 Perform one **Unpivot** operation.
+6. 💻 Apply **Group By** using one suitable categorical field and at least two aggregations.
 7. 💻 Review **Query Dependencies**.
 8. 💻 Open the Formula Bar and identify one generated M step.
 9. 💻 Open **Advanced Editor** and locate the `let` and `in` keywords.
@@ -458,8 +457,8 @@ Learners can integrate, reshape, and inspect multi-source data while understandi
 - 💡 Reinforce **Append = rows** and **Merge = columns**.
 - 💡 Use Left Outer first before demonstrating other join types.
 - 💡 Use Anti joins to explain unmatched-record checks.
-- 💡 Emphasize that **Group By changes the grain** of the result.
 - 💡 Teach Unpivot as a data-modeling preparation technique, not only a button.
+- 💡 Emphasize that **Group By changes the grain** of the result.
 - 💡 Keep M introductory and readable; avoid advanced custom functions here.
 - 💡 Demonstrate generated M before asking learners to edit it.
 - ⚠️ Confirm matching key columns have compatible data types before Merge.
@@ -473,8 +472,8 @@ Learners should now understand:
 
 - 🔁 Append vs Merge.
 - 🔁 Common Power Query join types.
-- 🔁 Group By and common aggregations.
 - 🔁 Pivot and Unpivot.
+- 🔁 Group By and common aggregations.
 - 🔁 Folder-based consolidation.
 - 🔁 Parameters and Query Dependencies.
 - 🔁 The basic `let … in` structure of M.
