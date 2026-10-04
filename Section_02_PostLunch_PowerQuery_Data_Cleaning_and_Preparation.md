@@ -90,7 +90,9 @@ Power Query is the data-preparation layer used to connect, inspect, clean, resha
 
 ---
 
-<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/451e4256-c3bd-4105-b341-97a0ab6c08b7" />
+<img width="1000" height="600" alt="Power Query Editor interface with key areas labelled" src="https://github.com/user-attachments/assets/451e4256-c3bd-4105-b341-97a0ab6c08b7" />
+
+**Figure S02-01 — Power Query Editor Interface: Key Areas and Navigation**
 
 ---
 
@@ -137,7 +139,9 @@ Use these tools to inspect:
 
 ---
 
-<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/6403e8fc-5e66-4396-add9-7a57546e456e" />
+<img width="1000" height="600" alt="Power Query data profiling view showing column quality, distribution, and profile" src="https://github.com/user-attachments/assets/6403e8fc-5e66-4396-add9-7a57546e456e" />
+
+**Figure S02-02 — Power Query Data Profiling: Column Quality, Distribution, and Profile**
 
 ---
 
@@ -376,7 +380,6 @@ A clean, analysis-ready HR table with **1,473 rows** after exact duplicate remov
 - 💡 Use descriptive query and step names where useful.
 - ⚠️ Do not introduce Merge, Append, Pivot, or Unpivot in depth here; reserve them for Section 03.
 - ⚠️ Do not start DAX calculations in this session.
-- 🖼️ Use screenshots only for concepts that benefit from a static visual; routine transformations can be demonstrated live.
 
 ---
 
