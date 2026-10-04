@@ -463,7 +463,7 @@ Example:
 ```DAX
 Released Production =
 CALCULATE(
-    [Production Quantity],
+    SUM(FactProduction[ProducedQtyUnits]),
     USERELATIONSHIP(
         DimDate[DateKey],
         FactProduction[ReleaseDateKey]
@@ -616,9 +616,9 @@ D. Inventory Movements <br>
 
 ### 🔴 Q4. What is the preferred relationship pattern in a basic star schema?
 
-A. Fact (1) → Dimension (*) <br>
-B. Dimension (1) → Fact (*) <br>
-C. Fact (*) ↔ Fact (*) for every table <br>
+A. Fact (1) → Dimension (\*) <br>
+B. Dimension (1) → Fact (\*) <br>
+C. Fact (\*) ↔ Fact (\*) for every table <br>
 D. No relationships <br>
 
 <details>
