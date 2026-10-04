@@ -255,7 +255,7 @@ Check that:
 |---|---|---|
 | **One-to-Many (1:*)** | One dimension row relates to many fact rows | Preferred star-schema relationship |
 | **One-to-One (1:1)** | One row matches one row | Less common |
-| **Many-to-Many (*:*)** | Repeated values exist on both sides | Use only when justified |
+| **Many-to-Many (\*:\*)** | Repeated values exist on both sides | Use only when justified |
 
 ### 💡 Preferred Pattern
 
