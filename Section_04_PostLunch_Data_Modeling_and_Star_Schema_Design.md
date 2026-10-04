@@ -185,8 +185,9 @@ Identify:
 - 🛠️ Observe how dimensions can filter fact tables.
 - 🛠️ Compare the different business grains of Sales and Budget.
 
-> 🖼️ **Image Placeholder S04-01:** Model View of the Sales/Budget semantic model with fact and dimension tables labelled.  
-> **Planned file:** `images/S04_01_Sales_Budget_Model.png`
+---
+
+<img width="1308" height="526" alt="image" src="https://github.com/user-attachments/assets/925b9e0d-4656-4904-850e-5359b52a6ab0" />
 
 ---
 
@@ -212,8 +213,9 @@ DimProduct — Fact Table — DimPlant
 - ✅ Simpler DAX
 - ✅ Better scalability
 
-> 🖼️ **Image Placeholder S04-02:** Simple star-schema diagram showing one fact table surrounded by Date, Product, Plant, and Warehouse dimensions.  
-> **Planned file:** `images/S04_02_Star_Schema.png`
+---
+
+<img width="997" height="600" alt="image" src="https://github.com/user-attachments/assets/02f28b62-3afc-40b0-a49e-5254ee3625de" />
 
 ---
 
@@ -372,23 +374,23 @@ Load the selected tables from:
 
 Use **single-direction filtering from Dimension → Fact** for the following relationships.
 
-| From Table | From Column | To Table | To Column | Cardinality | Status | Filter Direction |
-|---|---|---|---|---|---|---|
-| `DimDate` | `DateKey` | `FactProduction` | `ManufactureDateKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimDate` | `DateKey` | `FactProduction` | `ReleaseDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
-| `DimDate` | `DateKey` | `FactProduction` | `ExpiryDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
-| `DimDate` | `DateKey` | `FactProductionPlan` | `PlanMonthDateKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimDate` | `DateKey` | `FactInventorySnapshot` | `SnapshotDateKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimDate` | `DateKey` | `FactInventorySnapshot` | `ExpiryDateKey` | 1 → * | ⚪ Inactive | Dim → Fact |
-| `DimProduct` | `ProductKey` | `FactProduction` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimProduct` | `ProductKey` | `FactProductionPlan` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimProduct` | `ProductKey` | `FactInventorySnapshot` | `ProductKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimPlant` | `PlantKey` | `FactProduction` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimPlant` | `PlantKey` | `FactProductionPlan` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimPlant` | `PlantKey` | `FactInventorySnapshot` | `PlantKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimBatch` | `BatchKey` | `FactProduction` | `BatchKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimBatch` | `BatchKey` | `FactInventorySnapshot` | `BatchKey` | 1 → * | ✅ Active | Dim → Fact |
-| `DimWarehouse` | `WarehouseKey` | `FactInventorySnapshot` | `WarehouseKey` | 1 → * | ✅ Active | Dim → Fact |
+| **Sl. No.** | **From Table** | **From Column** | **To Table**            | **To Column**        | **Cardinality** | **Status** | **Filter Direction** |
+| -----------: | -------------- | --------------- | ----------------------- | -------------------- | --------------- | ---------- | -------------------- |
+| 1 | `DimDate`      | `DateKey`       | `FactProduction`        | `ManufactureDateKey` | 1 → \*          | ✅ Active   | Dim → Fact |
+| 2 | `DimDate`      | `DateKey`       | `FactProduction`        | `ReleaseDateKey`     | 1 → \*          | ⚪ Inactive | Dim → Fact |
+| 3 | `DimDate`      | `DateKey`       | `FactProduction`        | `ExpiryDateKey`      | 1 → \*          | ⚪ Inactive | Dim → Fact |
+| 4 | `DimDate`      | `DateKey`       | `FactProductionPlan`    | `PlanMonthDateKey`   | 1 → \*          | ✅ Active   | Dim → Fact |
+| 5 | `DimDate`      | `DateKey`       | `FactInventorySnapshot` | `SnapshotDateKey`    | 1 → \*          | ✅ Active   | Dim → Fact |
+| 6 | `DimDate`      | `DateKey`       | `FactInventorySnapshot` | `ExpiryDateKey`      | 1 → \*          | ⚪ Inactive | Dim → Fact |
+| 7 | `DimProduct`   | `ProductKey`    | `FactProduction`        | `ProductKey`         | 1 → \*          | ✅ Active   | Dim → Fact |
+| 8 | `DimProduct`   | `ProductKey`    | `FactProductionPlan`    | `ProductKey`         | 1 → \*          | ✅ Active   | Dim → Fact |
+| 9 | `DimProduct`   | `ProductKey`    | `FactInventorySnapshot` | `ProductKey`         | 1 → \*          | ✅ Active   | Dim → Fact |
+| 10 | `DimPlant`    | `PlantKey`      | `FactProduction`        | `PlantKey`           | 1 → \*          | ✅ Active   | Dim → Fact |
+| 11 | `DimPlant`    | `PlantKey`      | `FactProductionPlan`    | `PlantKey`           | 1 → \*          | ✅ Active   | Dim → Fact |
+| 12 | `DimPlant`    | `PlantKey`      | `FactInventorySnapshot` | `PlantKey`           | 1 → \*          | ✅ Active   | Dim → Fact |
+| 13 | `DimBatch`    | `BatchKey`      | `FactProduction`        | `BatchKey`           | 1 → \*          | ✅ Active   | Dim → Fact |
+| 14 | `DimBatch`    | `BatchKey`      | `FactInventorySnapshot` | `BatchKey`           | 1 → \*          | ✅ Active   | Dim → Fact |
+| 15 | `DimWarehouse`| `WarehouseKey`  | `FactInventorySnapshot` | `WarehouseKey`       | 1 → \*          | ✅ Active   | Dim → Fact |
 
 ### 💡 Filter Transmission Rule
 
@@ -404,8 +406,11 @@ Examples:
 
 ⚠️ Do not create extra Dimension-to-Dimension relationships merely because matching keys exist. They may create unnecessary or ambiguous filter paths.
 
-> 🖼️ **Image Placeholder S04-03:** Simplified Nirvaan Pharma Ltd semantic model showing Date, Product, Plant, Batch, Warehouse, Production, Plan, and Inventory Snapshot tables.  
-> **Planned file:** `images/S04_03_Nirvaan_Pharma_Model.png`
+---
+
+<img width="1512" height="742" alt="image" src="https://github.com/user-attachments/assets/b5b22141-6f20-4896-a5e5-18635594a7b6" />
+
+---
 
 ### ✅ Expected Model Behavior
 
