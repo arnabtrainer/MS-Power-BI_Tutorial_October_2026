@@ -188,17 +188,22 @@ DIVIDE(
 
 Use the **raw `DimDate[Date]` field**, not the automatic Date Hierarchy.
 
+#### 🛠️ Visual Types
+
+- **Date Slicer** → `DimDate[Date]`
+- **4 Card visuals** → one Card per measure
+
 #### Step 1 — Select One Complete Month
 
-- 🛠️ Add `DimDate[Date]` to a slicer.
+- 🛠️ Add `DimDate[Date]` to a **Slicer**.
 - 🛠️ Set the slicer type to **Between**.
-- 🛠️ Select one complete month, for example:
+- 🛠️ Select one complete month:
   - From: `01-May-2024`
   - To: `31-May-2024`
 
 #### Step 2 — Add Four Card Visuals
 
-Create separate Cards for:
+Create separate **Card** visuals for:
 
 - `[Production Quantity]`
 - `[Production Previous Month]`
@@ -293,6 +298,11 @@ DIVIDE(
 
 ### ✅ Validation — Previous Year, YoY Variance, and YoY %
 
+#### 🛠️ Visual Types
+
+- **Date Slicer** → `DimDate[Date]`
+- **4 Card visuals** → one Card per measure
+
 Use the same **raw `DimDate[Date]` Between slicer** and select one complete month that has prior-year data.
 
 For example:
@@ -300,7 +310,7 @@ For example:
 - From: `01-May-2024`
 - To: `31-May-2024`
 
-Create four Cards:
+Create four **Card** visuals:
 
 - `[Production Quantity]`
 - `[Production Previous Year]`
@@ -399,14 +409,22 @@ TOTALYTD(
 
 Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierarchy.
 
+#### 🛠️ Visual Types
+
+- **Date Slicer** → `DimDate[Date]`
+- **4 Card visuals** → Current, MTD, QTD, and Calendar YTD
+
 #### Step 1 — Select a Partial-Month Range
 
+- 🛠️ Add `DimDate[Date]` to a **Slicer**.
 - 🛠️ Set the slicer type to **Between**.
 - 🛠️ Select:
   - From: `01-May-2024`
   - To: `15-May-2024`
 
 #### Step 2 — Add Four Card Visuals
+
+Create separate **Card** visuals for:
 
 - `[Production Quantity]`
 - `[Production MTD]`
@@ -470,24 +488,31 @@ TOTALYTD(
 
 ### ✅ Validation — Fiscal YTD
 
-Use:
+#### 🛠️ Visual Types
 
-- Fiscal Year slicer
-- Month/Fiscal Month visual
+- **Slicer** → `DimDate[FiscalYear]`
+- **Matrix** → validate the month-by-month accumulation
+
+#### 🛠️ Configure the Matrix
+
+**Rows**
+- `DimDate[FiscalYearMonth]` / Fiscal Month
+
+**Values**
 - `[Production Quantity]`
 - `[Production Fiscal YTD]`
 
-Then:
+#### ✅ Validation Steps
 
-1. 🛠️ Select one Fiscal Year.
-2. 🛠️ Review April, May, June, and later months.
+1. 🛠️ Select **FY2024-25** in the Fiscal Year slicer.
+2. 🛠️ Review April, May, June, and later months in the Matrix.
 3. ✅ April Fiscal YTD should contain April production only.
 4. ✅ May Fiscal YTD should contain April + May production.
 5. ✅ June Fiscal YTD should contain April + May + June production.
 6. ✅ The cumulative value should continue through March.
-7. ✅ When the next Fiscal Year begins in April, Fiscal YTD should restart.
+7. ✅ Select the next Fiscal Year and confirm that Fiscal YTD restarts in April.
 
-> 💡 **Teaching Point:** Fiscal YTD validates both the DAX formula and the April–March fiscal-calendar requirement.
+> 💡 **Teaching Point:** Use the **Matrix for validation** because learners can see the monthly production and cumulative Fiscal YTD side by side.
 
 ---
 
@@ -552,27 +577,34 @@ DIVIDE(
 - Attainment > `100%` → Plan exceeded.
 - Attainment < `100%` → Plan not fully achieved.
 
-### Suggested Visual
+### Suggested Visual for Presentation
 
-Use a **Matrix or Combo Chart** with:
+After validating the measures, optionally use a **Line and Clustered Column Chart** *(Combo Chart)* for business presentation.
 
-- Fiscal Month
+#### 🛠️ Combo Chart Configuration
+
+**X-axis**
+- `DimDate[FiscalYearMonth]` / Fiscal Month
+
+**Column Y-axis**
 - `[Production Quantity]`
 - `[Planned Production]`
-- `[Production Variance]`
+
+**Line Y-axis**
 - `[Plan Attainment %]`
 
-Add:
+**Slicers**
+- `DimProduct[ProductName]`
+- `DimPlant[PlantName]`
 
-- Product slicer
-- Plant slicer
+> 💡 **Why this visual?** The columns compare Actual vs Plan, while the line shows the Attainment % trend over time.
 
-> 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual visual showing Actual, Plan, Variance, and Plan Attainment %.  
+> 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual Combo Chart showing Actual, Plan, and Plan Attainment %.  
 > **Planned file:** `images/S06_02_Plan_vs_Actual.png`
 
 ### ✅ Validation — Plan vs Actual
 
-Use a **Matrix visual** to validate Plan vs Actual at a compatible business grain.
+Use a **Matrix visual** for validation because exact values are easier to inspect and manually reconcile.
 
 #### 🛠️ Visual Type
 
@@ -593,18 +625,20 @@ Use a **Matrix visual** to validate Plan vs Actual at a compatible business grai
 - `DimProduct[ProductName]`
 - `DimPlant[PlantName]`
 
-### ✅ Validation Steps
+#### ✅ Validation Steps
 
-1. Select one **Product**.
-2. Select one **Plant**.
-3. Review one Fiscal Month, for example a month in **FY2024-25**.
-4. Verify:
+1. 🛠️ Select one **Product**.
+2. 🛠️ Select one **Plant**.
+3. 🛠️ Review one Fiscal Month, preferably in **FY2024-25**.
+4. ✅ Verify:
 
    **Production Variance = Production Quantity − Planned Production**
 
-5. Verify:
+5. ✅ Verify:
 
    **Plan Attainment % = Production Quantity ÷ Planned Production**
+
+6. ✅ Confirm that Actual and Plan respond to the same Fiscal Month, Product, and Plant selection.
 
 ### 💡 Interpretation
 
@@ -621,26 +655,15 @@ Choose one row from the Matrix and manually calculate:
 ```text
 Variance = Actual - Plan
 Plan Attainment % = Actual ÷ Plan
-
-Confirm:
-
-- ✅ Actual and Plan respond to the same Fiscal Month, Product, and Plant selection.
-- ✅ `Production Variance = Production Quantity − Planned Production`.
-- ✅ `Plan Attainment % = Production Quantity ÷ Planned Production`.
-- ✅ Positive Variance means Actual is above Plan.
-- ✅ Negative Variance means Actual is below Plan.
-- ✅ `100%` attainment means Actual exactly matches Plan.
-
-### 🧮 Manual Cross-Check
-
-Pick **one Fiscal Month + one Product + one Plant** from the visual and manually verify:
-
-```text
-Variance = Actual - Plan
-Attainment % = Actual ÷ Plan
 ```
 
-> ⚠️ Do not compare daily production directly with the monthly plan.
+The manually calculated results should match the Matrix.
+
+> ⚠️ Compare Plan and Actual at **monthly grain** because `FactProductionPlan` contains monthly planning data. Do not directly compare daily Actual Production with a monthly Plan.
+
+> 💡 **Trainer Rule:**  
+> **Matrix = validation of exact numbers**  
+> **Combo Chart = presentation of the business trend**
 
 ---
 
@@ -687,9 +710,17 @@ It does **not** permanently change the semantic model.
 
 Use the **same raw Date selection** for both measures and display them side by side.
 
-Create:
+#### 🛠️ Visual Types
 
-- Date / Month
+- **Date Slicer** → `DimDate[Date]`
+- **Matrix** → compare Manufacture-Date vs Release-Date results by month
+
+#### 🛠️ Configure the Matrix
+
+**Rows**
+- `DimDate[FiscalYearMonth]` / Fiscal Month
+
+**Values**
 - `[Production Quantity]`
 - `[Released Production]`
 
@@ -732,6 +763,17 @@ For every DAX measure, validate three things:
 
 > 💡 A DAX formula is not considered validated only because it returns a number.
 
+### 🧭 Validation Visual Guide
+
+| Validation Need | Recommended Visual | Why |
+|---|---|---|
+| Single KPI / previous-period value | **Card** | Easy to compare exact headline values |
+| Month-by-month cumulative result | **Matrix** | Shows current and cumulative values side by side |
+| Plan vs Actual exact validation | **Matrix** | Best for manual reconciliation |
+| Plan vs Actual business presentation | **Line and Clustered Column Chart** | Shows Actual vs Plan columns with Attainment % trend |
+| Active vs inactive Date relationship | **Matrix** | Makes the two Date-role results easy to compare |
+| Date range selection | **Slicer** using raw `DimDate[Date]` | Keeps time-intelligence filter context clear |
+
 ---
 
 ## 💻 9. Simple Validation Page — Consolidation
@@ -747,6 +789,10 @@ Do not introduce new DAX here.
 
 ### Visual 1 — Current vs Previous Period
 
+**Visual Type:** **Card visuals**
+
+Create separate Cards for:
+
 - `[Production Quantity]`
 - `[Production Previous Month]`
 - `[Production MoM Variance]`
@@ -757,6 +803,12 @@ Do not introduce new DAX here.
 
 ### Visual 2 — Plan vs Actual
 
+**Visual Type:** **Matrix**
+
+**Rows**
+- `DimDate[FiscalYearMonth]`
+
+**Values**
 - `[Production Quantity]`
 - `[Planned Production]`
 - `[Production Variance]`
@@ -764,6 +816,12 @@ Do not introduce new DAX here.
 
 ### Visual 3 — Date Role
 
+**Visual Type:** **Matrix**
+
+**Rows**
+- `DimDate[FiscalYearMonth]`
+
+**Values**
 - `[Production Quantity]`
 - `[Released Production]`
 
@@ -842,6 +900,7 @@ Learners can create understandable advanced DAX measures for **previous-period a
 - 💡 Use **one business question → one short formula → one validation visual**.
 - 💡 Validate every measure using **Base Value → Filter Response → Business Meaning**.
 - 💡 Manually reconcile at least one **MoM**, one **YoY**, and one **Plan vs Actual** calculation during the demonstration.
+- 💡 Use **Cards for headline KPI validation**, **Matrices for exact row-by-row validation**, and **Combo Charts for presentation/trend storytelling**.
 - 💡 For every DAX function, state **Purpose → Target → Result** before explaining syntax.
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
