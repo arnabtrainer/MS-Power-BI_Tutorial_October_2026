@@ -173,21 +173,69 @@ DIVIDE(
 - 🎯 **`DIVIDE()` Purpose:** Calculates a ratio safely when the denominator may be zero or blank.
 - 🧭 **Target:** Express the month-over-month production change as a percentage.
 
-### ✅ Simple Validation
+### ✅ Validation — Previous Month, MoM Variance, and MoM %
 
 Use the **raw `DimDate[Date]` field**, not the automatic Date Hierarchy.
 
+#### Step 1 — Select One Complete Month
+
 - 🛠️ Add `DimDate[Date]` to a slicer.
 - 🛠️ Set the slicer type to **Between**.
-- 🛠️ Select one complete month, for example `01-May-2023` to `31-May-2023`.
-- 🛠️ Add:
-  - Card → `[Production Quantity]`
-  - Card → `[Production Previous Month]`
+- 🛠️ Select one complete month, for example:
+  - From: `01-May-2023`
+  - To: `31-May-2023`
 
-### ✅ Expected Behavior
+#### Step 2 — Add Four Card Visuals
 
-- `[Production Quantity]` → production for the selected month.
-- `[Production Previous Month]` → production for the immediately preceding month.
+Create separate Cards for:
+
+- `[Production Quantity]`
+- `[Production Previous Month]`
+- `[Production MoM Variance]`
+- `[Production MoM %]`
+
+#### Step 3 — Verify the Expected Behavior
+
+- ✅ `[Production Quantity]` → production for the selected/current month.
+- ✅ `[Production Previous Month]` → production for the immediately preceding month.
+- ✅ `[Production MoM Variance]` → Current Production − Previous Month Production.
+- ✅ `[Production MoM %]` → MoM Variance ÷ Previous Month Production.
+
+### 🧮 Manual Cross-Check
+
+For May 2023:
+
+- Current Production = `655,701`
+- Previous Month Production = `402,518`
+
+```text
+MoM Variance
+= 655,701 - 402,518
+= 253,183
+```
+
+```text
+MoM %
+= 253,183 ÷ 402,518
+≈ 62.90%
+```
+
+Expected Cards:
+
+| Measure | Expected Value |
+|---|---:|
+| Production Quantity | 655,701 |
+| Production Previous Month | 402,518 |
+| Production MoM Variance | 253,183 |
+| Production MoM % | 62.90% |
+
+### 💡 Interpretation
+
+- Positive MoM Variance / % → production increased.
+- Negative MoM Variance / % → production decreased.
+- `0%` → no month-over-month change.
+
+> 💡 **Teaching Point:** Manually verify at least one MoM example. A DAX measure returning a number does not automatically mean the result is correct.
 
 > ⚠️ Avoid the automatic **Year → Quarter → Month** Date Hierarchy for this first `PREVIOUSMONTH()` demonstration because additional hierarchy filters can make the result blank or confusing.
 
@@ -232,19 +280,56 @@ DIVIDE(
 
 - 🧭 **Target of `DIVIDE()`:** Convert the year-over-year production variance into a safe percentage calculation.
 
-### ✅ Simple Validation
+### ✅ Validation — Previous Year, YoY Variance, and YoY %
 
-Use the same **raw `DimDate[Date]` Between slicer** and select one complete month.
+Use the same **raw `DimDate[Date]` Between slicer** and select one complete month that has prior-year data.
 
-Compare:
+For example:
 
-- Card → `[Production Quantity]`
-- Card → `[Production Previous Year]`
+- From: `01-May-2024`
+- To: `31-May-2024`
+
+Create four Cards:
+
+- `[Production Quantity]`
+- `[Production Previous Year]`
+- `[Production YoY Variance]`
+- `[Production YoY %]`
 
 ### ✅ Expected Behavior
 
-- `[Production Quantity]` → production for the selected month.
-- `[Production Previous Year]` → production for the corresponding month one year earlier.
+- `[Production Quantity]` → production for May 2024.
+- `[Production Previous Year]` → production for May 2023.
+- `[Production YoY Variance]` → Current Production − Previous Year Production.
+- `[Production YoY %]` → YoY Variance ÷ Previous Year Production.
+
+### 🧮 Manual Cross-Check
+
+Using the practice data:
+
+- May 2024 Production = `613,548`
+- May 2023 Production = `655,701`
+
+```text
+YoY Variance
+= 613,548 - 655,701
+= -42,153
+```
+
+```text
+YoY %
+= -42,153 ÷ 655,701
+≈ -6.43%
+```
+
+Expected Cards:
+
+| Measure | Expected Value |
+|---|---:|
+| Production Quantity | 613,548 |
+| Production Previous Year | 655,701 |
+| Production YoY Variance | -42,153 |
+| Production YoY % | -6.43% |
 
 > 💡 If the selected period has no corresponding prior-year production data, `[Production Previous Year]` may legitimately be blank.
 
@@ -299,33 +384,48 @@ TOTALYTD(
 - **QTD** → start of quarter to current date
 - **YTD** → start of year to current date
 
-### ✅ Validation
+### ✅ Validation — MTD, QTD, and Calendar YTD
 
 Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierarchy.
 
 #### Step 1 — Select a Partial-Month Range
 
 - 🛠️ Set the slicer type to **Between**.
-- 🛠️ Select a partial-month range, for example:
+- 🛠️ Select:
   - From: `01-May-2023`
   - To: `15-May-2023`
 
-#### Step 2 — Add KPI Cards
-
-Add separate Card visuals for:
+#### Step 2 — Add Four Card Visuals
 
 - `[Production Quantity]`
 - `[Production MTD]`
 - `[Production QTD]`
 - `[Production Calendar YTD]`
 
-#### Step 3 — Verify the Expected Behavior
+#### Step 3 — Verify the Time Windows
 
-- ✅ `[Production MTD]` → production accumulated from **01-May-2023 to 15-May-2023**.
-- ✅ `[Production QTD]` → production accumulated from the **start of the current quarter** to `15-May-2023`.
-- ✅ `[Production Calendar YTD]` → production accumulated from **01-Jan-2023 to 15-May-2023**.
+- ✅ `[Production Quantity]` → production visible in the selected Date range.
+- ✅ `[Production MTD]` → production from the beginning of May through May 15.
+- ✅ `[Production QTD]` → production from the beginning of the current calendar quarter through May 15.
+- ✅ `[Production Calendar YTD]` → production from January 1 through May 15.
+
+### 💡 Relative Check
+
+For the same ending date, the accumulation window normally becomes wider:
+
+```text
+MTD ⊆ QTD ⊆ Calendar YTD
+```
+
+Where production exists in the earlier periods:
+
+```text
+Production MTD ≤ Production QTD ≤ Production Calendar YTD
+```
 
 > 💡 Use a **partial-month** range for demonstration. If the entire month is selected, MTD may appear equal to the month's Production Quantity, which is correct but less illustrative.
+
+> ⚠️ Validate the **date window and business meaning**, not only whether the Cards contain numbers.
 
 > 🚀 **Optional:** Learners may create all three measures if time permits. The main objective is to understand the pattern, not memorize every function.
 
@@ -357,7 +457,7 @@ TOTALYTD(
 - Calendar YTD resets on **January 1**.
 - Fiscal YTD resets after **March 31**.
 
-### ✅ Validation
+### ✅ Validation — Fiscal YTD
 
 Use:
 
@@ -368,10 +468,15 @@ Use:
 
 Then:
 
-- 🛠️ Select one Fiscal Year.
-- 🛠️ Review the values from April onward.
-- ✅ `[Production Fiscal YTD]` should accumulate from **April 1**.
-- ✅ The measure should reset after **March 31** when the next fiscal year begins.
+1. 🛠️ Select one Fiscal Year.
+2. 🛠️ Review April, May, June, and later months.
+3. ✅ April Fiscal YTD should contain April production only.
+4. ✅ May Fiscal YTD should contain April + May production.
+5. ✅ June Fiscal YTD should contain April + May + June production.
+6. ✅ The cumulative value should continue through March.
+7. ✅ When the next Fiscal Year begins in April, Fiscal YTD should restart.
+
+> 💡 **Teaching Point:** Fiscal YTD validates both the DAX formula and the April–March fiscal-calendar requirement.
 
 ---
 
@@ -454,7 +559,7 @@ Add:
 > 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual visual showing Actual, Plan, Variance, and Plan Attainment %.  
 > **Planned file:** `images/S06_02_Plan_vs_Actual.png`
 
-### ✅ Validation
+### ✅ Validation — Plan vs Actual
 
 Validate Plan vs Actual at compatible business grain:
 
@@ -469,10 +574,23 @@ Validate Plan vs Actual at compatible business grain:
 
 Confirm:
 
-- ✅ Actual and Plan respond to the same Product and Plant selection.
-- ✅ Variance = Actual − Plan.
-- ✅ Plan Attainment % = Actual ÷ Plan.
-- ⚠️ Do not compare daily production directly with the monthly plan.
+- ✅ Actual and Plan respond to the same Fiscal Month, Product, and Plant selection.
+- ✅ `Production Variance = Production Quantity − Planned Production`.
+- ✅ `Plan Attainment % = Production Quantity ÷ Planned Production`.
+- ✅ Positive Variance means Actual is above Plan.
+- ✅ Negative Variance means Actual is below Plan.
+- ✅ `100%` attainment means Actual exactly matches Plan.
+
+### 🧮 Manual Cross-Check
+
+Pick **one Fiscal Month + one Product + one Plant** from the visual and manually verify:
+
+```text
+Variance = Actual - Plan
+Attainment % = Actual ÷ Plan
+```
+
+> ⚠️ Do not compare daily production directly with the monthly plan.
 
 ---
 
@@ -515,9 +633,9 @@ CALCULATE(
 
 It does **not** permanently change the semantic model.
 
-### ✅ Validation
+### ✅ Validation — Active vs Inactive Date Relationship
 
-Use the **same Date selection** for both measures and display them side by side.
+Use the **same raw Date selection** for both measures and display them side by side.
 
 Create:
 
@@ -525,14 +643,29 @@ Create:
 - `[Production Quantity]`
 - `[Released Production]`
 
+#### Step 1 — No Date Filter
+
+- ✅ Compare the overall totals.
+- 💡 They may be the same because no Date relationship is restricting the fact rows.
+
+#### Step 2 — Apply One Date/Month Filter
+
+Use the same Date selection for both measures.
+
 Interpretation:
 
 - `[Production Quantity]` → uses the active **Manufacture Date** relationship.
 - `[Released Production]` → uses the inactive **Release Date** relationship through `USERELATIONSHIP()`.
 
-✅ The values may differ because the **same quantity** is being analyzed through different Date roles.
+#### Step 3 — Explain the Business Meaning
 
-> 💡 If no Date filter is applied, both measures may show the same overall total.
+- ✅ Different values are valid because the **same Produced Quantity** is being viewed through two different Date roles.
+- ✅ `USERELATIONSHIP()` changes the Date lens for `[Released Production]` only.
+- ✅ The model relationship itself is not permanently changed.
+
+> 💡 **Teaching Point:**  
+> Without `USERELATIONSHIP()` → **When was it manufactured?**  
+> With `USERELATIONSHIP()` → **When was it released?**
 
 > 🖼️ **Image Placeholder S06-03:** Comparison of Production by Manufacture Date and Release Date using `USERELATIONSHIP()`.  
 > **Planned file:** `images/S06_03_USERELATIONSHIP.png`
@@ -566,7 +699,11 @@ Do not introduce new DAX here.
 
 - `[Production Quantity]`
 - `[Production Previous Month]`
+- `[Production MoM Variance]`
+- `[Production MoM %]`
 - `[Production Previous Year]`
+- `[Production YoY Variance]`
+- `[Production YoY %]`
 
 ### Visual 2 — Plan vs Actual
 
@@ -586,10 +723,14 @@ Confirm that:
 
 - ✅ Every base measure returns a sensible value before filters are applied.
 - ✅ Product and Plant slicers filter the relevant measures correctly.
-- ✅ Previous Month and Previous Year respond to the **raw Date selection**.
-- ✅ MTD/QTD/YTD behave correctly under a partial-month Date range.
+- ✅ Previous Month responds correctly to the **raw Date selection**.
+- ✅ MoM Variance and MoM % reconcile with the Current and Previous Month values.
+- ✅ Previous Year responds correctly when prior-year data exists.
+- ✅ YoY Variance and YoY % reconcile with the Current and Previous Year values.
+- ✅ MTD/QTD/YTD use the intended accumulation windows.
+- ✅ Fiscal YTD follows the April–March fiscal year and resets in April.
 - ✅ Plan vs Actual is compared at **Fiscal Month + Product + Plant** grain.
-- ✅ Fiscal YTD follows the April–March fiscal year.
+- ✅ Production Variance and Plan Attainment % reconcile manually for at least one selection.
 - ✅ `[Production Quantity]` and `[Released Production]` use different Date roles under the same Date selection.
 - ✅ `USERELATIONSHIP()` affects only `[Released Production]`.
 
@@ -625,15 +766,20 @@ Learners should:
 
 1. 💻 Create `[Production Previous Month]`.
 2. 💻 Create `[Production MoM Variance]`.
-3. 💻 Create `[Production Previous Year]`.
-4. 💻 Create `[Production Fiscal YTD]`.
-5. 💻 Create `[Planned Production]`.
-6. 💻 Create `[Production Variance]`.
-7. 💻 Create `[Plan Attainment %]`.
-8. 💻 Create `[Released Production]` using `USERELATIONSHIP()`.
-9. 💻 Validate Previous Month / Previous Year using the **raw Date slicer**.
-10. 💻 Validate Plan vs Actual at **Fiscal Month + Product + Plant** grain.
-11. 💻 Compare `[Production Quantity]` and `[Released Production]` under the same Date selection.
+3. 💻 Create `[Production MoM %]`.
+4. 💻 Validate one MoM calculation manually.
+5. 💻 Create `[Production Previous Year]`.
+6. 💻 Create `[Production YoY Variance]`.
+7. 💻 Create `[Production YoY %]`.
+8. 💻 Validate one YoY calculation manually.
+9. 💻 Create `[Production Fiscal YTD]`.
+10. 💻 Create `[Planned Production]`.
+11. 💻 Create `[Production Variance]`.
+12. 💻 Create `[Plan Attainment %]`.
+13. 💻 Create `[Released Production]` using `USERELATIONSHIP()`.
+14. 💻 Validate Previous Month / Previous Year using the **raw Date slicer**.
+15. 💻 Validate Plan vs Actual at **Fiscal Month + Product + Plant** grain.
+16. 💻 Compare `[Production Quantity]` and `[Released Production]` under the same Date selection.
 
 ### ✅ Expected Outcome
 
@@ -645,6 +791,7 @@ Learners can create understandable advanced DAX measures for **previous-period a
 
 - 💡 Use **one business question → one short formula → one validation visual**.
 - 💡 Validate every measure using **Base Value → Filter Response → Business Meaning**.
+- 💡 Manually reconcile at least one **MoM**, one **YoY**, and one **Plan vs Actual** calculation during the demonstration.
 - 💡 For every DAX function, state **Purpose → Target → Result** before explaining syntax.
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
