@@ -152,7 +152,7 @@ SUM(RN_East1[EastSales])
 - 🎯 **`SUM()` Purpose:** Adds numeric values in a column under the current filter context.
 - 🧭 **Target:** Calculate Total Sales that automatically responds to Month/Product filters.
 
-### Example Calculated Column
+### Example Calculated Column (Table View -> RN_East1 -> New Column)
 
 ```DAX
 SalesBand =
