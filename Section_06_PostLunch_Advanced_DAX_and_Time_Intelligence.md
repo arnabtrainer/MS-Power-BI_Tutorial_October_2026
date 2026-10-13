@@ -130,6 +130,17 @@ Use:
 
 Avoid teaching several long formulas together.
 
+### 💡 Standard Demonstration Period
+
+Use **May 2024** as the primary demonstration month wherever practical.
+
+- Previous Month → April 2024
+- Previous Year → May 2023
+- Following Month → June 2024
+- Fiscal Year → FY2024-25
+
+This gives learners useful historical and forward context around the selected period.
+
 ---
 
 ## 💻 2. Previous Month Production
@@ -182,8 +193,8 @@ Use the **raw `DimDate[Date]` field**, not the automatic Date Hierarchy.
 - 🛠️ Add `DimDate[Date]` to a slicer.
 - 🛠️ Set the slicer type to **Between**.
 - 🛠️ Select one complete month, for example:
-  - From: `01-May-2023`
-  - To: `31-May-2023`
+  - From: `01-May-2024`
+  - To: `31-May-2024`
 
 #### Step 2 — Add Four Card Visuals
 
@@ -203,31 +214,31 @@ Create separate Cards for:
 
 ### 🧮 Manual Cross-Check
 
-For May 2023:
+For May 2024:
 
-- Current Production = `655,701`
-- Previous Month Production = `402,518`
+- Current Production = `613,548`
+- Previous Month Production = `564,164`
 
 ```text
 MoM Variance
-= 655,701 - 402,518
-= 253,183
+= 613,548 - 564,164
+= 49,384
 ```
 
 ```text
 MoM %
-= 253,183 ÷ 402,518
-≈ 62.90%
+= 49,384 ÷ 564,164
+≈ 8.75%
 ```
 
 Expected Cards:
 
 | Measure | Expected Value |
 |---|---:|
-| Production Quantity | 655,701 |
-| Production Previous Month | 402,518 |
-| Production MoM Variance | 253,183 |
-| Production MoM % | 62.90% |
+| Production Quantity | 613,548 |
+| Production Previous Month | 564,164 |
+| Production MoM Variance | 49,384 |
+| Production MoM % | 8.75% |
 
 ### 💡 Interpretation
 
@@ -392,8 +403,8 @@ Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierar
 
 - 🛠️ Set the slicer type to **Between**.
 - 🛠️ Select:
-  - From: `01-May-2023`
-  - To: `15-May-2023`
+  - From: `01-May-2024`
+  - To: `15-May-2024`
 
 #### Step 2 — Add Four Card Visuals
 
@@ -405,9 +416,9 @@ Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierar
 #### Step 3 — Verify the Time Windows
 
 - ✅ `[Production Quantity]` → production visible in the selected Date range.
-- ✅ `[Production MTD]` → production from the beginning of May through May 15.
-- ✅ `[Production QTD]` → production from the beginning of the current calendar quarter through May 15.
-- ✅ `[Production Calendar YTD]` → production from January 1 through May 15.
+- ✅ `[Production MTD]` → production from the beginning of May 2024 through May 15, 2024.
+- ✅ `[Production QTD]` → production from April 1, 2024 through May 15, 2024.
+- ✅ `[Production Calendar YTD]` → production from January 1, 2024 through May 15, 2024.
 
 ### 💡 Relative Check
 
@@ -796,6 +807,7 @@ Learners can create understandable advanced DAX measures for **previous-period a
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
 - 💡 Start Previous Month / Previous Year with a simple **Date slicer** rather than a complex fiscal Matrix.
+- 💡 Use **May 2024** as the default demonstration month for consistency across the session.
 - 💡 Explain monthly grain before Plan vs Actual.
 - 💡 Keep MTD/QTD as short patterns; do not over-explain them.
 - 💡 Reinforce that `USERELATIONSHIP()` affects only the current measure.
