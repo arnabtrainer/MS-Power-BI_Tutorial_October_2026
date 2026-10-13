@@ -70,6 +70,32 @@ Primary tables used:
 
 > 💡 **Scope:** Time intelligence, `USERELATIONSHIP()`, rankings, dynamic selections, and advanced context manipulation are covered in **Section 06**.
 
+
+### 🧭 DAX Function — Purpose and Target Map
+
+| **DAX Function / Construct** | **Purpose** | **Target in This Section** |
+|---|---|---|
+| `SUM()` | Adds numeric values in a column | Total Sales, Production Quantity, Good Quantity, Rejected Quantity, Production Cost |
+| `AVERAGE()` | Returns the arithmetic mean of a numeric column | Average Sales |
+| `COUNT()` | Counts non-blank numeric values | Count populated Sales values |
+| `COUNTROWS()` | Counts rows in a table | Count Sales rows |
+| `DISTINCTCOUNT()` | Counts unique values in a column | Count unique Products or Batches |
+| `MIN()` / `MAX()` | Return the minimum / maximum value in a column | Identify lowest and highest Sales |
+| `IF()` | Returns one result when a condition is true and another when false | Create a simple Sales classification column |
+| `SUMX()` | Evaluates an expression row by row and sums the results | Calculate row-level GST values and total them |
+| `AVERAGEX()` | Evaluates an expression row by row and averages the results | Average row-level GST |
+| `MINX()` / `MAXX()` | Evaluate an expression row by row and return minimum / maximum | Lowest / highest row-level GST |
+| `CALCULATE()` | Re-evaluates an expression under modified filter context | Calculate Sales for a selected Month/Product combination |
+| `FILTER()` | Returns a filtered table | Supply only the required rows to another DAX calculation |
+| `ALL()` | Removes filters from a table/column and returns all values | Compare filtered Sales with overall Sales |
+| `REMOVEFILTERS()` | Clears selected filter context | Ignore Month while keeping other filters |
+| `DIVIDE()` | Performs safe division with an alternate result | Yield %, Rejection %, Average Production per Batch |
+| `VAR` / `RETURN` | Store and reuse intermediate values | Make larger measures easier to read and maintain |
+| `STDEV.S()` | Calculates sample standard deviation | Optional: measure Sales variability |
+| `VAR.S()` | Calculates sample variance | Optional: measure Sales dispersion |
+
+> 💡 **Learner Connection:** Start with the **business question**, then identify which DAX function helps answer it.
+
 ---
 
 ## ⏱️ Suggested 3-Hour Flow
@@ -123,6 +149,9 @@ TotalSales =
 SUM(RN_East1[EastSales])
 ```
 
+- 🎯 **`SUM()` Purpose:** Adds numeric values in a column under the current filter context.
+- 🧭 **Target:** Calculate Total Sales that automatically responds to Month/Product filters.
+
 ### Example Calculated Column
 
 ```DAX
@@ -133,6 +162,9 @@ IF(
     "Regular"
 )
 ```
+
+- 🎯 **`IF()` Purpose:** Returns one result when a condition is true and another when it is false.
+- 🧭 **Target:** Classify each Sales row as `High` or `Regular`.
 
 ### 💡 Guidance
 
@@ -162,12 +194,18 @@ TotalSales =
 SUM(RN_East1[EastSales])
 ```
 
+- 🎯 **`SUM()` Purpose:** Add all visible Sales values.
+- 🧭 **Target:** Show total Sales for the current Product/Month filter context.
+
 ### Average Sales
 
 ```DAX
 AverageSales =
 AVERAGE(RN_East1[EastSales])
 ```
+
+- 🎯 **`AVERAGE()` Purpose:** Calculate the arithmetic mean of visible numeric values.
+- 🧭 **Target:** Show typical/average Sales under the current filters.
 
 ### Count of Non-Blank Sales Values
 
@@ -176,6 +214,9 @@ CountSale =
 COUNT(RN_East1[EastSales])
 ```
 
+- 🎯 **`COUNT()` Purpose:** Count non-blank numeric values in a column.
+- 🧭 **Target:** Count how many Sales values are present in the current context.
+
 ### Maximum and Minimum
 
 ```DAX
@@ -183,20 +224,35 @@ MaxSales =
 MAX(RN_East1[EastSales])
 ```
 
+- 🎯 **`MAX()` Purpose:** Return the highest visible Sales value.
+- 🧭 **Target:** Identify the maximum Sales value under the current filters.
+
 ```DAX
 MinSales =
 MIN(RN_East1[EastSales])
 ```
 
+- 🎯 **`MIN()` Purpose:** Return the lowest visible Sales value.
+- 🧭 **Target:** Identify the minimum Sales value under the current filters.
+
 ### ✅ Validation
 
-Add these measures to:
+Create:
 
-- Card / Multi-row Card
-- Table by `Month`
-- Table by `Product`
+- Card → `[TotalSales]`
+- Card → `[AverageSales]`
+- Card → `[CountSale]`
+- Card → `[MaxSales]`
+- Card → `[MinSales]`
+- Table → `Product`, `Month`, and the measures above
 
-Then apply slicers and observe how the measures respond.
+Then:
+
+- 🛠️ Add a `Month` slicer.
+- 🛠️ Select one Month and confirm every measure recalculates.
+- 🛠️ Add a `Product` slicer and select one Product.
+- ✅ `TotalSales`, `AverageSales`, `MinSales`, and `MaxSales` should change with the filter context.
+- ✅ `CountSale` should show the number of non-blank Sales values in the selected context.
 
 ---
 
@@ -211,12 +267,18 @@ CountSale =
 COUNT(RN_East1[EastSales])
 ```
 
+- 🎯 **`COUNT()` Purpose:** Count non-blank numeric values.
+- 🧭 **Target:** Count populated Sales values, not necessarily all table rows.
+
 ### Count Table Rows
 
 ```DAX
 SalesRowCount =
 COUNTROWS(RN_East1)
 ```
+
+- 🎯 **`COUNTROWS()` Purpose:** Count the rows in a table or table expression.
+- 🧭 **Target:** Count all Sales rows currently visible after filters.
 
 ### Count Distinct Products
 
@@ -225,11 +287,29 @@ ProductCount =
 DISTINCTCOUNT(RN_East1[Product])
 ```
 
+- 🎯 **`DISTINCTCOUNT()` Purpose:** Count unique values in a column.
+- 🧭 **Target:** Count how many different Products exist in the current context.
+
 ### 💡 Simple Rule
 
 - `COUNT()` → counts non-blank values in a column.
 - `COUNTROWS()` → counts rows in a table.
 - `DISTINCTCOUNT()` → counts unique values.
+
+
+### ✅ Validation
+
+Create three Cards:
+
+- `[CountSale]`
+- `[SalesRowCount]`
+- `[ProductCount]`
+
+Then filter by one Product.
+
+- ✅ `[ProductCount]` should become `1`.
+- ✅ `[SalesRowCount]` should show all rows for that Product.
+- ✅ `[CountSale]` should count only non-blank numeric Sales values.
 
 ---
 
@@ -297,6 +377,9 @@ SUMX(
 )
 ```
 
+- 🎯 **`SUMX()` Purpose:** Evaluate an expression row by row and sum the results.
+- 🧭 **Target:** Calculate 18% GST for every Sales row and then total the GST.
+
 ### `AVERAGEX`
 
 ```DAX
@@ -306,6 +389,9 @@ AVERAGEX(
     RN_East1[EastSales] * 0.18
 )
 ```
+
+- 🎯 **`AVERAGEX()` Purpose:** Evaluate an expression row by row and average the results.
+- 🧭 **Target:** Calculate the average row-level GST amount.
 
 ### `MINX`
 
@@ -317,6 +403,9 @@ MINX(
 )
 ```
 
+- 🎯 **`MINX()` Purpose:** Evaluate an expression row by row and return the smallest result.
+- 🧭 **Target:** Find the lowest row-level GST amount.
+
 ### `MAXX`
 
 ```DAX
@@ -326,6 +415,9 @@ MAXX(
     RN_East1[EastSales] * 0.18
 )
 ```
+
+- 🎯 **`MAXX()` Purpose:** Evaluate an expression row by row and return the largest result.
+- 🧭 **Target:** Find the highest row-level GST amount.
 
 ### 💡 Difference
 
@@ -340,6 +432,20 @@ SUMX(Table, Expression)
 ```
 
 evaluates an expression row by row and then sums the results.
+
+
+### ✅ Validation
+
+Create a table with:
+
+- `Product`
+- `EastSales`
+- `[GSTSalesSumX]`
+
+Then apply a Product slicer.
+
+- ✅ `[GSTSalesSumX]` should recalculate for the selected Product.
+- 💡 Compare the result conceptually with `TotalSales × 18%` to confirm the iterator is producing the expected total.
 
 ---
 
@@ -362,6 +468,9 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`CALCULATE()` Purpose:** Evaluate an expression after modifying filter context.
+- 🧭 **Target:** Return Total Sales specifically for `AUG` and Product `P013`.
+
 This evaluates `[TotalSales]` using:
 
 - Month = `AUG`
@@ -371,6 +480,21 @@ This evaluates `[TotalSales]` using:
 
 `CALCULATE()` does not simply “filter rows.”  
 Its major role is to **change filter context before evaluating an expression**.
+
+
+### ✅ Validation
+
+Create:
+
+- Card → `[TotalSales]`
+- Card → `[AugP013Sales]`
+- Month slicer
+- Product slicer
+
+Then change the slicers.
+
+- ✅ `[TotalSales]` should follow the slicer selections.
+- ✅ `[AugP013Sales]` should continue to represent the DAX-defined `AUG` + `P013` context.
 
 ---
 
@@ -391,12 +515,28 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`FILTER()` Purpose:** Return only the rows that satisfy a condition.
+- 🧭 **Target:** Supply only `AUG` rows to `CALCULATE()` for the Sales calculation.
+
 ### 💡 Difference from CALCULATE
 
 - `CALCULATE()` → changes filter context and evaluates an expression.
 - `FILTER()` → returns a filtered table that another DAX function can use.
 
 ⚠️ Do not describe `FILTER()` as a direct substitute for `CALCULATE()`.
+
+
+### ✅ Validation
+
+Create:
+
+- Card → `[TotalSales]`
+- Card → `[AugSales]`
+
+Then select another Month in a slicer.
+
+- ✅ `[TotalSales]` should change with the slicer.
+- ✅ `[AugSales]` should continue to calculate using the August rows defined by the measure.
 
 ---
 
@@ -412,6 +552,9 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`ALL()` Purpose:** Remove filters and return all rows/values from the specified table or column.
+- 🧭 **Target:** Show overall Sales even when the report is filtered.
+
 This removes filters from the entire `RN_East1` table.
 
 ### Using `REMOVEFILTERS`
@@ -424,19 +567,32 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`REMOVEFILTERS()` Purpose:** Clear filter context from the specified table or column.
+- 🧭 **Target:** Ignore the Month filter while preserving other filters such as Product.
+
 This removes only the Month filter.
 
-### Guided Demonstration
+### ✅ Validation
 
 Create a table containing:
 
 - `Product`
 - `[TotalSales]`
 - `[TotalSalesAll]`
+- `[TotalSalesNoMonthFilter]`
 
-Add a Month slicer and compare the behavior.
+Add:
 
-✅ **Outcome:** Learners see how DAX can deliberately preserve or remove filter context.
+- Month slicer
+- Product slicer
+
+Then:
+
+- ✅ `[TotalSales]` should respond to both Month and Product filters.
+- ✅ `[TotalSalesAll]` should ignore filters from `RN_East1`.
+- ✅ `[TotalSalesNoMonthFilter]` should ignore Month but continue to respond to Product.
+
+**Outcome:** Learners see the difference between removing **all table filters** and removing **one selected filter**.
 
 ---
 
@@ -451,10 +607,16 @@ Production Quantity =
 SUM(FactProduction[ProducedQtyUnits])
 ```
 
+- 🎯 **`SUM()` Purpose here:** Add all produced units in the current filter context.
+- 🧭 **Target:** Provide the denominator/base production measure for production KPIs.
+
 ```DAX
 Good Quantity =
 SUM(FactProduction[GoodQtyUnits])
 ```
+
+- 🎯 **`SUM()` Purpose here:** Add all good units in the current filter context.
+- 🧭 **Target:** Provide the numerator for Yield %.
 
 ```DAX
 Yield % =
@@ -465,6 +627,9 @@ DIVIDE(
 )
 ```
 
+- 🎯 **`DIVIDE()` Purpose:** Perform safe division and return an alternate result when the denominator is zero/blank.
+- 🧭 **Target:** Calculate the percentage of produced units that are good units.
+
 ### 💡 Why `DIVIDE()`?
 
 It is safer than:
@@ -474,6 +639,20 @@ It is safer than:
 ```
 
 when the denominator may be zero or blank.
+
+
+### ✅ Validation
+
+Create Cards for:
+
+- `[Production Quantity]`
+- `[Good Quantity]`
+- `[Yield %]`
+
+Then apply Product and Plant slicers.
+
+- ✅ `[Yield %]` should recalculate as Good Quantity ÷ Production Quantity.
+- ✅ If Production Quantity becomes zero/blank, the measure should safely return the alternate result `0`.
 
 ---
 
@@ -493,12 +672,30 @@ RETURN
     DIVIDE(RejectedQty, ProducedQty, 0)
 ```
 
+- 🎯 **`VAR` Purpose:** Store an intermediate result with a meaningful name.
+- 🎯 **`RETURN` Purpose:** Return the final expression after the variables are defined.
+- 🧭 **Target:** Keep the Rejection % measure readable by naming Produced and Rejected quantities before calculating the ratio.
+
 ### 💡 Benefits
 
 - 💡 Easier to read
 - 💡 Easier to debug
 - 💡 Avoids repeating the same expression
 - 💡 Useful in larger DAX measures
+
+
+### ✅ Validation
+
+Create Cards for:
+
+- `[Rejected Quantity]`
+- `[Production Quantity]`
+- `[Rejection %]`
+
+Then filter by Product or Plant.
+
+- ✅ Rejection % should recalculate using the selected context.
+- 💡 Compare the displayed ratio with `Rejected Quantity ÷ Production Quantity`.
 
 ---
 
@@ -527,6 +724,9 @@ Rejected Quantity =
 SUM(FactProduction[RejectedQtyUnits])
 ```
 
+- 🎯 **`SUM()` Purpose:** Add rejected units under the current filters.
+- 🧭 **Target:** Measure production loss/rejection volume.
+
 ### Production Cost
 
 ```DAX
@@ -534,12 +734,18 @@ Production Cost =
 SUM(FactProduction[ProductionCostINR])
 ```
 
+- 🎯 **`SUM()` Purpose:** Add production cost values under the current filters.
+- 🧭 **Target:** Calculate total production cost by Product, Plant, or Date context.
+
 ### Batch Count
 
 ```DAX
 Batch Count =
 DISTINCTCOUNT(FactProduction[BatchKey])
 ```
+
+- 🎯 **`DISTINCTCOUNT()` Purpose:** Count unique Batch keys.
+- 🧭 **Target:** Measure how many distinct production batches are represented.
 
 ### Yield %
 
@@ -563,6 +769,8 @@ DIVIDE(
 )
 ```
 
+- 🎯 **`DIVIDE()` Target:** Express rejected units as a percentage of total production.
+
 ### Average Production per Batch
 
 ```DAX
@@ -574,17 +782,38 @@ DIVIDE(
 )
 ```
 
+- 🎯 **`DIVIDE()` Target:** Calculate average produced units per distinct batch.
+
 ### ✅ Validation
 
-Create a simple table or matrix using:
+Create a Matrix:
 
-- `DimProduct`
-- `DimPlant`
-- the measures above
+**Rows**
 
-Then apply Product and Plant slicers.
+- `DimProduct[ProductName]`
 
-✅ Measures should respond automatically through the relationships created in Section 4.
+**Columns / Slicer**
+
+- `DimPlant[PlantName]`
+
+**Values**
+
+- `[Production Quantity]`
+- `[Good Quantity]`
+- `[Rejected Quantity]`
+- `[Production Cost]`
+- `[Batch Count]`
+- `[Yield %]`
+- `[Rejection %]`
+- `[Avg Production per Batch]`
+
+Then:
+
+- 🛠️ Select one Plant and verify all measures change.
+- 🛠️ Select one Product and verify all measures change again.
+- ✅ `Good Quantity + Rejected Quantity` should reconcile with Production Quantity for the underlying production records.
+- ✅ Yield % and Rejection % should behave as ratios, not fixed stored values.
+- ✅ Batch Count should count unique Batch keys, not production rows.
 
 ---
 
@@ -608,13 +837,32 @@ SDSales =
 STDEV.S(RN_East1[EastSales])
 ```
 
+- 🎯 **`STDEV.S()` Purpose:** Measure sample standard deviation—how spread out values are around the mean.
+- 🧭 **Target:** Demonstrate Sales variability across observations.
+
 ```DAX
 VarSales =
 VAR.S(RN_East1[EastSales])
 ```
 
+- 🎯 **`VAR.S()` Purpose:** Measure sample variance.
+- 🧭 **Target:** Demonstrate another way to quantify Sales dispersion.
+
 🚀 Use these as an **optional demonstration** if time permits.  
 They are not required before moving to Section 6.
+
+
+### ✅ Optional Validation
+
+Create Cards for:
+
+- `[SDSales]`
+- `[VarSales]`
+
+Apply a Product or Month filter.
+
+- ✅ Both values should recalculate for the selected subset.
+- 💡 Explain that larger values generally indicate greater spread/variability.
 
 ---
 
@@ -645,6 +893,7 @@ Learners can create reusable measures and explain how filter context changes the
 ## 💡 Trainer Guidelines
 
 - 💡 Teach **measures first**; avoid creating unnecessary calculated columns.
+- 💡 For every DAX function, explain **Purpose → Target → Formula → Validation**.
 - 💡 Explain the difference between **row context** and **filter context** carefully.
 - 💡 Reinforce `CALCULATE()` as a **filter-context modifier**.
 - 💡 Explain that `FILTER()` returns a table.
