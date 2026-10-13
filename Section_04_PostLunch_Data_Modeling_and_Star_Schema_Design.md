@@ -255,7 +255,7 @@ Check that:
 |---|---|---|
 | **One-to-Many (1:*)** | One dimension row relates to many fact rows | Preferred star-schema relationship |
 | **One-to-One (1:1)** | One row matches one row | Less common |
-| **Many-to-Many (\*:\*)** | Repeated values exist on both sides | Use only when justified |
+| **Many-to-Many (*:*)** | Repeated values exist on both sides | Use only when justified |
 
 ### 💡 Preferred Pattern
 
@@ -458,13 +458,14 @@ DimDate[DateKey]
 
 Therefore, a normal `DimDate` slicer filters Production by **Manufacture Date**.
 
-### 🧮 Using an Inactive Relationship in DAX
+### 🧮 Normal Measure vs `USERELATIONSHIP()`
 
-The DAX function used to activate an inactive relationship **inside a calculation** is:
+Both measures below sum the same numeric column:
 
-`USERELATIONSHIP()`
-
-Example:
+```DAX
+Production Quantity =
+SUM(FactProduction[ProducedQtyUnits])
+```
 
 ```DAX
 Released Production =
@@ -477,13 +478,51 @@ CALCULATE(
 )
 ```
 
+The difference is **which Date relationship is used when `DimDate` filters the calculation**.
+
+| Measure | Date Relationship Used | Business Meaning |
+|---|---|---|
+| `[Production Quantity]` | ✅ Active `ManufactureDateKey` | How much production was **manufactured** in the selected period? |
+| `[Released Production]` | ⚪ Inactive `ReleaseDateKey`, activated by `USERELATIONSHIP()` | How much production was **released** in the selected period? |
+
+### 💡 Simple Example
+
+Assume:
+
+| Batch | Produced Qty | Manufacture Date | Release Date |
+|---|---:|---|---|
+| B1 | 1,000 | 28-Apr | 03-May |
+| B2 | 2,000 | 10-May | 15-May |
+| B3 | 3,000 | 25-May | 04-Jun |
+
+If the Date slicer selects **May**:
+
+- `[Production Quantity]` → B2 + B3 = **5,000 units**, because both were **manufactured in May**.
+- `[Released Production]` → B1 + B2 = **3,000 units**, because both were **released in May**.
+
+### 🎯 Purpose of `USERELATIONSHIP()`
+
+- 🎯 **Purpose:** Use a specified inactive relationship for the current DAX calculation.
+- 🧭 **Target here:** Analyze the same production quantity by **Release Date** instead of the default **Manufacture Date**.
+
+### 💡 Important Interpretation
+
+`USERELATIONSHIP()` does **not** change the quantity being summed.  
+It changes the **Date lens** through which that quantity is analyzed.
+
+> **Without `USERELATIONSHIP()` → “When was it manufactured?”**  
+> **With `USERELATIONSHIP()` → “When was it released?”**
+
+> 💡 If no `DimDate` filter is applied, both measures may show the same overall total because neither Date relationship is restricting the fact rows.
+
 ### 💡 What to Teach at This Stage
 
 - 💡 Explain **why** the inactive relationship exists.
 - 💡 Show the `USERELATIONSHIP()` syntax once.
-- 💡 Explain that it temporarily changes the relationship used by that measure.
+- 💡 Compare the two measures using the same Date slicer.
+- 💡 Explain that the function affects only that measure; it does not permanently change the model.
 - ⚠️ Do not teach advanced DAX behavior here; detailed practice comes in the DAX sessions.
-- ⚠️ Do not make multiple competing date relationships active when they create ambiguity.
+- ⚠️ Do not make multiple competing Date relationships active when they create ambiguity.
 
 ### 🌐 Learn More
 
@@ -530,10 +569,11 @@ Learners should:
 7. 💻 Identify the three selected fact tables.
 8. 💻 Create the relationships according to the **Recommended Relationship Wires** table.
 9. 💻 Verify active and inactive Date relationships.
-10. 💻 Configure the Date table and month sorting.
-11. 💻 Create at least one hierarchy.
-12. 💻 Hide unnecessary technical keys.
-13. 💻 Arrange the model into a readable star-schema layout.
+10. 💻 Create `[Production Quantity]` and `[Released Production]`, then compare them with the same Date filter.
+11. 💻 Configure the Date table and month sorting.
+12. 💻 Create at least one hierarchy.
+13. 💻 Hide unnecessary technical keys.
+14. 💻 Arrange the model into a readable star-schema layout.
 
 ### ✅ Expected Outcome
 
@@ -550,6 +590,7 @@ A clean semantic model in which dimensions filter the appropriate fact tables th
 - 💡 Use the simpler Sales/Budget model before the pharma model.
 - 💡 Introduce only the Nirvaan Pharma Ltd tables needed for this session.
 - 💡 Demonstrate `USERELATIONSHIP()` once to show how an inactive Date relationship can be used in a measure.
+- 💡 Compare **Manufacture Date vs Release Date** using the same production quantity so learners see that the relationship changes the Date lens, not the aggregation.
 - ⚠️ Do not build complex DAX measures yet.
 - ⚠️ Do not enable bidirectional filtering merely to fix a visual.
 - ⚠️ Validate slicer/filter behavior after creating relationships.
@@ -566,6 +607,7 @@ Learners should now understand:
 - 🔁 Cardinality and filter direction.
 - 🔁 Date tables and hierarchies.
 - 🔁 Active/inactive relationship concepts and the purpose of `USERELATIONSHIP()`.
+- 🔁 Why the same aggregation can produce different results under different Date relationships.
 - 🔁 Basic semantic-model hygiene.
 
 ---
