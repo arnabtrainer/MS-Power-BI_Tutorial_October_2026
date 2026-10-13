@@ -157,7 +157,7 @@ SUM(RN_East1[EastSales])
 ```DAX
 SalesBand =
 IF(
-    RN_East1[EastSales] >= 10000,
+    RN_East1[EastSales] >= 4500,
     "High",
     "Regular"
 )
