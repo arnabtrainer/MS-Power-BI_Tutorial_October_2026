@@ -175,15 +175,21 @@ DIVIDE(
 
 ### ✅ Simple Validation
 
-Use:
+Use the **raw `DimDate[Date]` field**, not the automatic Date Hierarchy.
 
-- a **Date slicer** based on `DimDate[Date]`
-- Card → `[Production Quantity]`
-- Card → `[Production Previous Month]`
+- 🛠️ Add `DimDate[Date]` to a slicer.
+- 🛠️ Set the slicer type to **Between**.
+- 🛠️ Select one complete month, for example `01-May-2023` to `31-May-2023`.
+- 🛠️ Add:
+  - Card → `[Production Quantity]`
+  - Card → `[Production Previous Month]`
 
-Select a complete month in the Date slicer and compare the two values.
+### ✅ Expected Behavior
 
-> 💡 Keep the first demonstration simple. Avoid using custom `FiscalYearMonth` as the Matrix row while introducing `PREVIOUSMONTH()`.
+- `[Production Quantity]` → production for the selected month.
+- `[Production Previous Month]` → production for the immediately preceding month.
+
+> ⚠️ Avoid the automatic **Year → Quarter → Month** Date Hierarchy for this first `PREVIOUSMONTH()` demonstration because additional hierarchy filters can make the result blank or confusing.
 
 ---
 
@@ -228,12 +234,19 @@ DIVIDE(
 
 ### ✅ Simple Validation
 
-Use the same Date slicer and compare:
+Use the same **raw `DimDate[Date]` Between slicer** and select one complete month.
 
-- `[Production Quantity]`
-- `[Production Previous Year]`
+Compare:
 
-> 💡 If the selected period has no corresponding prior-year production data, the Previous Year measure may legitimately be blank.
+- Card → `[Production Quantity]`
+- Card → `[Production Previous Year]`
+
+### ✅ Expected Behavior
+
+- `[Production Quantity]` → production for the selected month.
+- `[Production Previous Year]` → production for the corresponding month one year earlier.
+
+> 💡 If the selected period has no corresponding prior-year production data, `[Production Previous Year]` may legitimately be blank.
 
 ---
 
@@ -290,21 +303,29 @@ TOTALYTD(
 
 Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierarchy.
 
+#### Step 1 — Select a Partial-Month Range
+
 - 🛠️ Set the slicer type to **Between**.
-- 🛠️ Select a partial-month range, for example `01-May-2023` to `15-May-2023`.
-- 🛠️ Add separate Cards for:
-  - `[Production Quantity]`
-  - `[Production MTD]`
-  - `[Production QTD]`
-  - `[Production Calendar YTD]`
+- 🛠️ Select a partial-month range, for example:
+  - From: `01-May-2023`
+  - To: `15-May-2023`
 
-Expected interpretation:
+#### Step 2 — Add KPI Cards
 
-- ✅ **MTD** → production from May 1 to May 15.
-- ✅ **QTD** → production from the start of the current quarter to May 15.
-- ✅ **Calendar YTD** → production from January 1 to May 15.
+Add separate Card visuals for:
 
-> 💡 A partial-month range makes the accumulation behavior easier to see. At full-month granularity, MTD may equal the month's Production Quantity.
+- `[Production Quantity]`
+- `[Production MTD]`
+- `[Production QTD]`
+- `[Production Calendar YTD]`
+
+#### Step 3 — Verify the Expected Behavior
+
+- ✅ `[Production MTD]` → production accumulated from **01-May-2023 to 15-May-2023**.
+- ✅ `[Production QTD]` → production accumulated from the **start of the current quarter** to `15-May-2023`.
+- ✅ `[Production Calendar YTD]` → production accumulated from **01-Jan-2023 to 15-May-2023**.
+
+> 💡 Use a **partial-month** range for demonstration. If the entire month is selected, MTD may appear equal to the month's Production Quantity, which is correct but less illustrative.
 
 > 🚀 **Optional:** Learners may create all three measures if time permits. The main objective is to understand the pattern, not memorize every function.
 
@@ -341,11 +362,16 @@ TOTALYTD(
 Use:
 
 - Fiscal Year slicer
-- Date/Month visual
+- Month/Fiscal Month visual
 - `[Production Quantity]`
 - `[Production Fiscal YTD]`
 
-Observe how Fiscal YTD accumulates from April onward.
+Then:
+
+- 🛠️ Select one Fiscal Year.
+- 🛠️ Review the values from April onward.
+- ✅ `[Production Fiscal YTD]` should accumulate from **April 1**.
+- ✅ The measure should reset after **March 31** when the next fiscal year begins.
 
 ---
 
@@ -428,6 +454,26 @@ Add:
 > 🖼️ **Image Placeholder S06-02:** Nirvaan Pharma Ltd Plan vs Actual visual showing Actual, Plan, Variance, and Plan Attainment %.  
 > **Planned file:** `images/S06_02_Plan_vs_Actual.png`
 
+### ✅ Validation
+
+Validate Plan vs Actual at compatible business grain:
+
+- 🛠️ Rows / Axis → **Fiscal Month**
+- 🛠️ Add a **Product** slicer.
+- 🛠️ Add a **Plant** slicer.
+- 🛠️ Values:
+  - `[Production Quantity]`
+  - `[Planned Production]`
+  - `[Production Variance]`
+  - `[Plan Attainment %]`
+
+Confirm:
+
+- ✅ Actual and Plan respond to the same Product and Plant selection.
+- ✅ Variance = Actual − Plan.
+- ✅ Plan Attainment % = Actual ÷ Plan.
+- ⚠️ Do not compare daily production directly with the monthly plan.
+
 ---
 
 ## 💻 8. Using an Inactive Relationship
@@ -471,22 +517,44 @@ It does **not** permanently change the semantic model.
 
 ### ✅ Validation
 
-Create a simple visual containing:
+Use the **same Date selection** for both measures and display them side by side.
+
+Create:
 
 - Date / Month
 - `[Production Quantity]`
 - `[Released Production]`
 
-The values may differ because the measures use different business-date roles.
+Interpretation:
+
+- `[Production Quantity]` → uses the active **Manufacture Date** relationship.
+- `[Released Production]` → uses the inactive **Release Date** relationship through `USERELATIONSHIP()`.
+
+✅ The values may differ because the **same quantity** is being analyzed through different Date roles.
+
+> 💡 If no Date filter is applied, both measures may show the same overall total.
 
 > 🖼️ **Image Placeholder S06-03:** Comparison of Production by Manufacture Date and Release Date using `USERELATIONSHIP()`.  
 > **Planned file:** `images/S06_03_USERELATIONSHIP.png`
 
 ---
 
-## 💻 9. Simple Validation Page
+## ✅ Validation Rule
 
-Create one compact report page.
+For every DAX measure, validate three things:
+
+1. **Base Value** — Does the measure return a sensible value without filters?
+2. **Filter Response** — Does it change correctly with Date, Product, or Plant selections?
+3. **Business Meaning** — Does the result answer the intended business question?
+
+> 💡 A DAX formula is not considered validated only because it returns a number.
+
+---
+
+## 💻 9. Simple Validation Page — Consolidation
+
+Create one compact report page only to **consolidate and verify the measures already created**.  
+Do not introduce new DAX here.
 
 ### Slicers
 
@@ -512,14 +580,17 @@ Create one compact report page.
 - `[Production Quantity]`
 - `[Released Production]`
 
-### ✅ Validation
+### ✅ Final Consolidation Check
 
 Confirm that:
 
-- ✅ Product and Plant slicers filter the measures correctly.
-- ✅ Previous Month and Previous Year respond to Date selection.
-- ✅ Plan vs Actual is compared at monthly grain.
+- ✅ Every base measure returns a sensible value before filters are applied.
+- ✅ Product and Plant slicers filter the relevant measures correctly.
+- ✅ Previous Month and Previous Year respond to the **raw Date selection**.
+- ✅ MTD/QTD/YTD behave correctly under a partial-month Date range.
+- ✅ Plan vs Actual is compared at **Fiscal Month + Product + Plant** grain.
 - ✅ Fiscal YTD follows the April–March fiscal year.
+- ✅ `[Production Quantity]` and `[Released Production]` use different Date roles under the same Date selection.
 - ✅ `USERELATIONSHIP()` affects only `[Released Production]`.
 
 ---
@@ -560,7 +631,9 @@ Learners should:
 6. 💻 Create `[Production Variance]`.
 7. 💻 Create `[Plan Attainment %]`.
 8. 💻 Create `[Released Production]` using `USERELATIONSHIP()`.
-9. 💻 Validate the measures using Date, Product, and Plant filters.
+9. 💻 Validate Previous Month / Previous Year using the **raw Date slicer**.
+10. 💻 Validate Plan vs Actual at **Fiscal Month + Product + Plant** grain.
+11. 💻 Compare `[Production Quantity]` and `[Released Production]` under the same Date selection.
 
 ### ✅ Expected Outcome
 
@@ -571,6 +644,7 @@ Learners can create understandable advanced DAX measures for **previous-period a
 ## 💡 Trainer Guidelines
 
 - 💡 Use **one business question → one short formula → one validation visual**.
+- 💡 Validate every measure using **Base Value → Filter Response → Business Meaning**.
 - 💡 For every DAX function, state **Purpose → Target → Result** before explaining syntax.
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
