@@ -245,9 +245,52 @@ Confirm that:
 **Y-axis**
 - `[Production Quantity]`
 
-### Sorting
+### 🛠️ Sort Fiscal Months Correctly
 
-Ensure `FiscalYearMonth` is sorted using the appropriate fiscal-period sort field where required.
+`DimDate[FiscalYearMonth]` is a text label, so Power BI may not automatically display fiscal months in chronological order.
+
+Use these **two separate sorting steps**:
+
+#### Step 1 — Set the Model-Level Sort Order
+
+1. Select `DimDate[FiscalYearMonth]` in the **Data** or **Model** view.
+2. Go to **Column tools → Sort by column**.
+3. Select `DimDate[FiscalPeriodSortKey]`.
+
+This tells Power BI the correct chronological order behind the `FiscalYearMonth` text labels.
+
+#### Step 2 — Set the Visual-Level Sort Order
+
+1. Select the **Line Chart**.
+2. Click the **... (More options)** menu on the visual.
+3. Choose **Sort axis / Sort by**.
+4. Select **FiscalYearMonth** — not `[Production Quantity]`.
+5. Choose **Ascending**.
+
+The X-axis should then appear in fiscal sequence, for example:
+
+```text
+FY2024-25 M01
+FY2024-25 M02
+FY2024-25 M03
+...
+FY2024-25 M12
+```
+
+> 💡 **Important:**  
+> **Sort by column** defines the chronological order of `FiscalYearMonth`.  
+> **Visual Sort** determines whether the chart follows that order or instead ranks the months by a measure such as Production Quantity.
+
+### ⚠️ If Sorting Still Does Not Work
+
+Create a temporary **Table** visual containing:
+
+- `DimDate[FiscalYearMonth]`
+- `DimDate[FiscalPeriodSortKey]`
+
+Confirm that each `FiscalYearMonth` maps to exactly **one** `FiscalPeriodSortKey`.
+
+If one Fiscal Year Month maps to multiple sort-key values, Power BI cannot reliably use that column for sorting.
 
 ### Optional Addition
 
@@ -260,10 +303,11 @@ as a second line if learners are comfortable comparing the two measures.
 ### ✅ Validation
 
 1. Select **FY2024-25**.
-2. Confirm months appear in correct fiscal order.
-3. Hover over **May 2024**.
-4. Confirm Production Quantity = **613,548**.
-5. Select a Plant and verify the line recalculates.
+2. Confirm the X-axis follows the fiscal sequence **M01 → M02 → ... → M12**.
+3. Confirm the chart is sorted by **FiscalYearMonth**, not by `[Production Quantity]`.
+4. Hover over **May 2024**.
+5. Confirm Production Quantity = **613,548**.
+6. Select a Plant and verify the line recalculates.
 
 ### 💡 Interpretation Questions
 
@@ -678,6 +722,7 @@ Learners complete **Dashboard Page 1 — Production Performance** and can explai
 - 💡 Reuse the measures from Sections 05 and 06 instead of creating unnecessary new DAX.
 - 💡 Use **Cards for headline KPIs**.
 - 💡 Use **Line Charts for time trends**.
+- 💡 For fiscal time axes, explain both **Sort by column** and the visual's **Sort by FiscalYearMonth → Ascending** setting.
 - 💡 Use **Bar Charts for Plant/Product comparison**.
 - 💡 Use **Matrices for exact validation and detailed investigation**.
 - 💡 Use the **Combo Chart for Actual vs Plan storytelling**.
