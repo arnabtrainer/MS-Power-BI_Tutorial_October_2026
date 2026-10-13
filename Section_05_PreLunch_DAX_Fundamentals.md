@@ -90,6 +90,7 @@ Primary tables used:
 | `ALL()` | Removes filters from a table/column and returns all values | Compare filtered Sales with overall Sales |
 | `REMOVEFILTERS()` | Clears selected filter context | Ignore Month while keeping other filters |
 | `DIVIDE()` | Performs safe division with an alternate result | Yield %, Rejection %, Average Production per Batch |
+| `COALESCE()` | Returns the first expression that is not BLANK | Optionally display `0` when a business measure would otherwise be BLANK |
 | `VAR` / `RETURN` | Store and reuse intermediate values | Make larger measures easier to read and maintain |
 | `STDEV.S()` | Calculates sample standard deviation | Optional: measure Sales variability |
 | `VAR.S()` | Calculates sample variance | Optional: measure Sales dispersion |
@@ -627,7 +628,7 @@ DIVIDE(
 )
 ```
 
-- 🎯 **`DIVIDE()` Purpose:** Perform safe division and return an alternate result when the denominator is zero/blank.
+- 🎯 **`DIVIDE()` Purpose:** Perform safe division and provide an alternate result when required.
 - 🧭 **Target:** Calculate the percentage of produced units that are good units.
 
 ### 💡 Why `DIVIDE()`?
@@ -640,7 +641,6 @@ It is safer than:
 
 when the denominator may be zero or blank.
 
-
 ### ✅ Validation
 
 Create Cards for:
@@ -649,10 +649,48 @@ Create Cards for:
 - `[Good Quantity]`
 - `[Yield %]`
 
-Then apply Product and Plant slicers.
+Then:
 
-- ✅ `[Yield %]` should recalculate as Good Quantity ÷ Production Quantity.
-- ✅ If Production Quantity becomes zero/blank, the measure should safely return the alternate result `0`.
+1. 🛠️ Apply a Product slicer.
+2. 🛠️ Apply a Plant slicer.
+3. ✅ Confirm that `[Yield %]` recalculates as **Good Quantity ÷ Production Quantity**.
+4. ✅ In a valid production context, verify the displayed ratio against the two base measures.
+5. 💡 If the selected Product/Plant combination has **no matching production rows**, the base measures may display **BLANK**, representing **no data**.
+
+> 💡 **Business Meaning:** `BLANK` and `0%` are not always the same. `BLANK` can mean that no production records exist, while `0%` can imply that production existed but yielded no good units.
+
+### 🚀 If You Intentionally Want Yield % to Show `0` When There Is No Data
+
+You can explicitly convert BLANK measures to zero using `COALESCE()`:
+
+```DAX
+Yield % =
+DIVIDE(
+    COALESCE([Good Quantity], 0),
+    COALESCE([Production Quantity], 0),
+    0
+)
+```
+
+- 🎯 **`COALESCE()` Purpose:** Return the first expression that is not BLANK.
+- 🧭 **Target:** Convert BLANK Good Quantity / Production Quantity values to `0` before calculating Yield %.
+
+### ✅ Validation — Forced Zero Display
+
+Use a Product/Plant combination with no matching production records.
+
+For example, in the current Nirvaan Pharma Ltd practice model:
+
+- **Product:** `Gemtaxa 200 mg`
+- **Plant:** `Vadodara Nutrition Plant`
+
+Expected behavior with the `COALESCE()` version:
+
+- `[Good Quantity]` → may display BLANK
+- `[Production Quantity]` → may display BLANK
+- `[Yield %]` → `0`
+
+> ⚠️ Use this version only when the reporting requirement explicitly wants **no data to display as zero**. Otherwise, retaining BLANK can communicate the business situation more accurately.
 
 ---
 
@@ -660,72 +698,81 @@ Then apply Product and Plant slicers.
 
 Variables improve readability and avoid repeating expressions.
 
-Example:
+### Step 1 — Create the Required Base Measure
 
-```DAX
-Rejection % =
-VAR ProducedQty =
-    SUM(FactProduction[ProducedQtyUnits])
-VAR RejectedQty =
-    SUM(FactProduction[RejectedQtyUnits])
-RETURN
-    DIVIDE(RejectedQty, ProducedQty, 0)
-```
+`[Production Quantity]` was created in the previous section.
 
-- 🎯 **`VAR` Purpose:** Store an intermediate result with a meaningful name.
-- 🎯 **`RETURN` Purpose:** Return the final expression after the variables are defined.
-- 🧭 **Target:** Keep the Rejection % measure readable by naming Produced and Rejected quantities before calculating the ratio.
-
-### 💡 Benefits
-
-- 💡 Easier to read
-- 💡 Easier to debug
-- 💡 Avoids repeating the same expression
-- 💡 Useful in larger DAX measures
-
-
-### ✅ Validation
-
-Create Cards for:
-
-- `[Rejected Quantity]`
-- `[Production Quantity]`
-- `[Rejection %]`
-
-Then filter by Product or Plant.
-
-- ✅ Rejection % should recalculate using the selected context.
-- 💡 Compare the displayed ratio with `Rejected Quantity ÷ Production Quantity`.
-
----
-
-## 💻 12. Nirvaan Pharma Ltd — Core Production Measures
-
-Create the following measures.
-
-### Production Quantity
-
-```DAX
-Production Quantity =
-SUM(FactProduction[ProducedQtyUnits])
-```
-
-### Good Quantity
-
-```DAX
-Good Quantity =
-SUM(FactProduction[GoodQtyUnits])
-```
-
-### Rejected Quantity
+Now create:
 
 ```DAX
 Rejected Quantity =
 SUM(FactProduction[RejectedQtyUnits])
 ```
 
-- 🎯 **`SUM()` Purpose:** Add rejected units under the current filters.
-- 🧭 **Target:** Measure production loss/rejection volume.
+- 🎯 **`SUM()` Purpose:** Add rejected units under the current filter context.
+- 🧭 **Target:** Calculate total rejected production quantity.
+
+### Step 2 — Create Rejection %
+
+```DAX
+Rejection % =
+VAR ProducedQty =
+    [Production Quantity]
+VAR RejectedQty =
+    [Rejected Quantity]
+RETURN
+    DIVIDE(
+        RejectedQty,
+        ProducedQty,
+        0
+    )
+```
+
+- 🎯 **`VAR` Purpose:** Store an intermediate result with a meaningful name.
+- 🎯 **`RETURN` Purpose:** Return the final calculation after the variables are defined.
+- 🧭 **Target:** Calculate Rejection % while keeping the DAX readable and reusing existing measures.
+
+### 💡 Benefits
+
+- 💡 Easier to read
+- 💡 Easier to debug
+- 💡 Avoids repeating expressions
+- 💡 Encourages measure reuse
+- 💡 Useful in larger DAX measures
+
+### ✅ Validation
+
+Create three Card visuals:
+
+- `[Rejected Quantity]`
+- `[Production Quantity]`
+- `[Rejection %]`
+
+Then:
+
+1. 🛠️ Check the values without Product or Plant filters.
+2. 🛠️ Select one Product.
+3. 🛠️ Select one Plant.
+4. ✅ Confirm that all three measures recalculate.
+5. ✅ Verify:
+
+   **Rejection % = Rejected Quantity ÷ Production Quantity**
+
+> 💡 **Teaching Point:** `VAR` values are temporary values used only while the measure is being evaluated. They do not create new columns or permanent measures.
+
+---
+
+## 💻 12. Nirvaan Pharma Ltd — Core Production Measures
+
+At this point, the following measures have already been created:
+
+- `[Production Quantity]`
+- `[Good Quantity]`
+- `[Rejected Quantity]`
+- `[Yield %]`
+- `[Rejection %]`
+
+Reuse these measures rather than creating them again.
 
 ### Production Cost
 
@@ -746,30 +793,6 @@ DISTINCTCOUNT(FactProduction[BatchKey])
 
 - 🎯 **`DISTINCTCOUNT()` Purpose:** Count unique Batch keys.
 - 🧭 **Target:** Measure how many distinct production batches are represented.
-
-### Yield %
-
-```DAX
-Yield % =
-DIVIDE(
-    [Good Quantity],
-    [Production Quantity],
-    0
-)
-```
-
-### Rejection %
-
-```DAX
-Rejection % =
-DIVIDE(
-    [Rejected Quantity],
-    [Production Quantity],
-    0
-)
-```
-
-- 🎯 **`DIVIDE()` Target:** Express rejected units as a percentage of total production.
 
 ### Average Production per Batch
 
@@ -878,11 +901,12 @@ Learners should:
 6. 💻 Create one measure using `CALCULATE()`.
 7. 💻 Create one measure using `FILTER()`.
 8. 💻 Compare `[TotalSales]` with `[TotalSalesAll]`.
-9. 💻 Create `[Production Quantity]`.
-10. 💻 Create `[Good Quantity]` and `[Rejected Quantity]`.
-11. 💻 Create `[Yield %]` using `DIVIDE()`.
+9. 💻 Create `[Production Quantity]` and `[Good Quantity]`.
+10. 💻 Create `[Yield %]` using `DIVIDE()`.
+11. 💻 Create `[Rejected Quantity]`.
 12. 💻 Create `[Rejection %]` using `VAR` / `RETURN`.
-13. 💻 Validate the measures using Product and Plant filters.
+13. 🚀 Optionally test the `COALESCE()` version of `[Yield %]` to force a zero when no production data exists.
+14. 💻 Validate the measures using Product and Plant filters.
 
 ### ✅ Expected Outcome
 
@@ -898,6 +922,7 @@ Learners can create reusable measures and explain how filter context changes the
 - 💡 Reinforce `CALCULATE()` as a **filter-context modifier**.
 - 💡 Explain that `FILTER()` returns a table.
 - 💡 Use `DIVIDE()` for business ratios.
+- 💡 Explain the difference between **BLANK** and **0** before using `COALESCE()` to force zero.
 - 💡 Encourage measure reuse, for example `[Yield %]` reusing `[Good Quantity]` and `[Production Quantity]`.
 - 💡 Keep statistical functions optional if time is limited.
 - ⚠️ Do not introduce time-intelligence functions yet.
@@ -916,7 +941,8 @@ Learners should now understand:
 - 🔁 Iterator functions.
 - 🔁 `CALCULATE()` and `FILTER()`.
 - 🔁 `ALL()` / `REMOVEFILTERS()`.
-- 🔁 `DIVIDE()` and `VAR` / `RETURN`.
+- 🔁 `DIVIDE()`, `COALESCE()`, and the difference between BLANK vs zero.
+- 🔁 `VAR` / `RETURN` and measure reuse.
 - 🔁 Reusable production KPI measures.
 
 ---
