@@ -572,16 +572,55 @@ Add:
 
 ### ✅ Validation — Plan vs Actual
 
-Validate Plan vs Actual at compatible business grain:
+Use a **Matrix visual** to validate Plan vs Actual at a compatible business grain.
 
-- 🛠️ Rows / Axis → **Fiscal Month**
-- 🛠️ Add a **Product** slicer.
-- 🛠️ Add a **Plant** slicer.
-- 🛠️ Values:
-  - `[Production Quantity]`
-  - `[Planned Production]`
-  - `[Production Variance]`
-  - `[Plan Attainment %]`
+#### 🛠️ Visual Type
+
+**Matrix**
+
+#### 🛠️ Configure the Matrix
+
+**Rows**
+- `DimDate[FiscalYearMonth]` / Fiscal Month
+
+**Values**
+- `[Production Quantity]`
+- `[Planned Production]`
+- `[Production Variance]`
+- `[Plan Attainment %]`
+
+**Slicers**
+- `DimProduct[ProductName]`
+- `DimPlant[PlantName]`
+
+### ✅ Validation Steps
+
+1. Select one **Product**.
+2. Select one **Plant**.
+3. Review one Fiscal Month, for example a month in **FY2024-25**.
+4. Verify:
+
+   **Production Variance = Production Quantity − Planned Production**
+
+5. Verify:
+
+   **Plan Attainment % = Production Quantity ÷ Planned Production**
+
+### 💡 Interpretation
+
+- Positive Variance → Actual Production is above Plan.
+- Negative Variance → Actual Production is below Plan.
+- `100%` Attainment → Actual exactly meets Plan.
+- Above `100%` → Plan exceeded.
+- Below `100%` → Plan not fully achieved.
+
+### 🧮 Manual Cross-Check
+
+Choose one row from the Matrix and manually calculate:
+
+```text
+Variance = Actual - Plan
+Plan Attainment % = Actual ÷ Plan
 
 Confirm:
 
