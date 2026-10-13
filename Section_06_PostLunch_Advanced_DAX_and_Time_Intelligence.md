@@ -68,6 +68,26 @@ Primary tables:
 
 > 💡 **Scope:** Ranking, dynamic KPI selection, field parameters, and more complex filter-context patterns are moved to later advanced-reporting sessions.
 
+
+### 🧭 DAX Function — Purpose and Target Map
+
+| **DAX Function** | **Purpose** | **Target in This Section** |
+|---|---|---|
+| `CALCULATE()` | Evaluates an expression under a modified filter context | Recalculate Production Quantity for another time period or relationship |
+| `PREVIOUSMONTH()` | Returns the dates belonging to the previous month | Compare current production with the immediately preceding month |
+| `DIVIDE()` | Performs safe division and handles zero/blank denominators | Calculate MoM %, YoY %, and Plan Attainment % |
+| `SAMEPERIODLASTYEAR()` | Returns the corresponding date period one year earlier | Compare current production with the same period last year |
+| `TOTALMTD()` | Accumulates a measure from the start of the month | Calculate Month-to-Date production |
+| `TOTALQTD()` | Accumulates a measure from the start of the quarter | Calculate Quarter-to-Date production |
+| `TOTALYTD()` | Accumulates a measure from the start of the year | Calculate Calendar YTD and April–March Fiscal YTD |
+| `SUM()` | Adds all numeric values in a column under the current filter context | Calculate total Planned Production |
+| `USERELATIONSHIP()` | Uses a specified inactive relationship for the current calculation | Analyze production by Release Date instead of Manufacture Date |
+| `RANKX()` | Ranks items by an expression | Optional: rank Products or Plants by performance |
+| `SELECTEDVALUE()` | Returns the single selected value in the current context | Optional: read a learner/user-selected KPI |
+| `SWITCH()` | Returns different results based on a selected condition/value | Optional: switch between KPIs dynamically |
+
+> 💡 **Learner Connection:** Focus on the **business question first**, then identify which DAX function helps answer it.
+
 ---
 
 ## ⏱️ Suggested 3-Hour Flow
@@ -128,6 +148,10 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`CALCULATE()` Purpose:** Re-evaluates a measure under a changed filter context.
+- 🎯 **`PREVIOUSMONTH()` Purpose:** Supplies the dates from the immediately preceding month.
+- 🧭 **Target:** Compare current Production Quantity with the previous month's production.
+
 ### Month-over-Month Variance
 
 ```DAX
@@ -145,6 +169,9 @@ DIVIDE(
     0
 )
 ```
+
+- 🎯 **`DIVIDE()` Purpose:** Calculates a ratio safely when the denominator may be zero or blank.
+- 🧭 **Target:** Express the month-over-month production change as a percentage.
 
 ### ✅ Simple Validation
 
@@ -176,6 +203,9 @@ CALCULATE(
 )
 ```
 
+- 🎯 **`SAMEPERIODLASTYEAR()` Purpose:** Returns the corresponding Date period one year earlier.
+- 🧭 **Target:** Compare current production with the same period in the previous year.
+
 ### Year-over-Year Variance
 
 ```DAX
@@ -193,6 +223,8 @@ DIVIDE(
     0
 )
 ```
+
+- 🧭 **Target of `DIVIDE()`:** Convert the year-over-year production variance into a safe percentage calculation.
 
 ### ✅ Simple Validation
 
@@ -219,6 +251,9 @@ TOTALMTD(
 )
 ```
 
+- 🎯 **`TOTALMTD()` Purpose:** Accumulates a measure from the beginning of the current month.
+- 🧭 **Target:** Show production achieved so far within the selected month.
+
 ### Quarter-to-Date
 
 ```DAX
@@ -228,6 +263,9 @@ TOTALQTD(
     DimDate[Date]
 )
 ```
+
+- 🎯 **`TOTALQTD()` Purpose:** Accumulates a measure from the beginning of the current quarter.
+- 🧭 **Target:** Show production achieved so far within the selected quarter.
 
 ### Calendar Year-to-Date
 
@@ -239,11 +277,34 @@ TOTALYTD(
 )
 ```
 
+- 🎯 **`TOTALYTD()` Purpose:** Accumulates a measure from the beginning of the year.
+- 🧭 **Target:** Show cumulative production from January 1 to the selected date.
+
 ### 💡 Teaching Point
 
 - **MTD** → start of month to current date
 - **QTD** → start of quarter to current date
 - **YTD** → start of year to current date
+
+### ✅ Validation
+
+Use the **raw `DimDate[Date]` field** in a slicer, not the automatic Date Hierarchy.
+
+- 🛠️ Set the slicer type to **Between**.
+- 🛠️ Select a partial-month range, for example `01-May-2023` to `15-May-2023`.
+- 🛠️ Add separate Cards for:
+  - `[Production Quantity]`
+  - `[Production MTD]`
+  - `[Production QTD]`
+  - `[Production Calendar YTD]`
+
+Expected interpretation:
+
+- ✅ **MTD** → production from May 1 to May 15.
+- ✅ **QTD** → production from the start of the current quarter to May 15.
+- ✅ **Calendar YTD** → production from January 1 to May 15.
+
+> 💡 A partial-month range makes the accumulation behavior easier to see. At full-month granularity, MTD may equal the month's Production Quantity.
 
 > 🚀 **Optional:** Learners may create all three measures if time permits. The main objective is to understand the pattern, not memorize every function.
 
@@ -266,6 +327,9 @@ TOTALYTD(
     "3/31"
 )
 ```
+
+- 🎯 **`TOTALYTD()` Purpose here:** Accumulates production using a custom year-end date.
+- 🧭 **Target:** Calculate cumulative production for the **April–March fiscal year**.
 
 ### 💡 Teaching Point
 
@@ -297,6 +361,9 @@ Create:
 Planned Production =
 SUM(FactProductionPlan[PlannedProductionUnits])
 ```
+
+- 🎯 **`SUM()` Purpose:** Adds numeric values in a column under the current filter context.
+- 🧭 **Target:** Calculate total Planned Production for the selected Month, Product, and Plant.
 
 ### 💡 Grain Reminder
 
@@ -331,6 +398,9 @@ DIVIDE(
     0
 )
 ```
+
+- 🎯 **`DIVIDE()` Purpose here:** Safely divides Actual Production by Planned Production.
+- 🧭 **Target:** Show how much of the production plan was achieved as a percentage.
 
 ### 💡 Interpretation
 
@@ -388,6 +458,10 @@ CALCULATE(
     )
 )
 ```
+
+- 🎯 **`USERELATIONSHIP()` Purpose:** Uses the specified inactive relationship for this calculation.
+- 🎯 **`CALCULATE()` Purpose here:** Re-evaluates `[Production Quantity]` using that alternative Date relationship.
+- 🧭 **Target:** Analyze production by **Release Date** instead of the default **Manufacture Date**.
 
 ### 💡 Interpretation
 
@@ -454,10 +528,19 @@ Confirm that:
 
 If time permits, briefly mention:
 
-- `RANKX()` → ranking products or plants
-- `SELECTEDVALUE()` → reading one selected value
-- `SWITCH()` → dynamic calculation selection
-- Field Parameters → dynamic report interaction
+- `RANKX()`  
+  - 🎯 **Purpose:** Rank rows/items based on a measure or expression.  
+  - 🧭 **Target:** Rank Products or Plants by Production Quantity.
+
+- `SELECTEDVALUE()`  
+  - 🎯 **Purpose:** Return the single selected value in the current filter context.  
+  - 🧭 **Target:** Read the KPI selected by a learner/user from a slicer.
+
+- `SWITCH()`  
+  - 🎯 **Purpose:** Return different results based on a selected condition or value.  
+  - 🧭 **Target:** Switch dynamically between Production, Yield, Rejection, or another KPI.
+
+- **Field Parameters** → dynamic report interaction *(Power BI feature, not a DAX function)*
 
 ⚠️ Do not make these mandatory hands-on exercises in this session.
 
@@ -488,6 +571,7 @@ Learners can create understandable advanced DAX measures for **previous-period a
 ## 💡 Trainer Guidelines
 
 - 💡 Use **one business question → one short formula → one validation visual**.
+- 💡 For every DAX function, state **Purpose → Target → Result** before explaining syntax.
 - 💡 Reuse the base measures created in Section 05.
 - 💡 Keep the Date dimension visible while explaining time intelligence.
 - 💡 Start Previous Month / Previous Year with a simple **Date slicer** rather than a complex fiscal Matrix.
