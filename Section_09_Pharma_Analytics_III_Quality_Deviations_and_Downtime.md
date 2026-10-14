@@ -11,7 +11,7 @@
 By the end of this session, learners should be able to:
 
 - 🎯 Analyze **Quality Test performance**, including Pass, Fail, OOS (Out of Specification), Retest, and Turnaround Time.
-- 🎯 Analyze **Batch Deviations** by severity, category, CAPA requirement, and closure age.
+- 🎯 Analyze **Batch Deviations** by severity, category, CAPA (Corrective and Preventive Action) requirement, and closure age.
 - 🎯 Analyze **Downtime** by category, reason, shift, equipment, and month.
 - 🎯 Reuse familiar DAX functions instead of learning unnecessary new syntax.
 - 🎯 Build a focused **Quality, Deviations & Downtime dashboard**.
@@ -203,7 +203,7 @@ This session intentionally **reuses DAX already learned**.
 ### Deviations
 
 - How many deviations were reported?
-- How many required CAPA?
+- How many required CAPA (Corrective and Preventive Action)?
 - Which severities and categories occur most frequently?
 - How long do closed deviations take to close?
 
@@ -455,7 +455,7 @@ Deviation Count =
 COUNTROWS(FactBatchDeviation)
 ```
 
-### CAPA Required Count
+### CAPA (Corrective and Preventive Action) Required Count
 
 ```DAX
 CAPA Required Count =
@@ -465,7 +465,7 @@ CALCULATE(
 )
 ```
 
-### CAPA Required %
+### CAPA (Corrective and Preventive Action) Required %
 
 ```DAX
 CAPA Required % =
