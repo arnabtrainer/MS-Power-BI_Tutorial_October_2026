@@ -10,7 +10,7 @@
 
 By the end of this session, learners should be able to:
 
-- 🎯 Analyze **Quality Test performance**, including Pass, Fail, OOS, Retest, and Turnaround Time.
+- 🎯 Analyze **Quality Test performance**, including Pass, Fail, OOS (Out of Specification), Retest, and Turnaround Time.
 - 🎯 Analyze **Batch Deviations** by severity, category, CAPA requirement, and closure age.
 - 🎯 Analyze **Downtime** by category, reason, shift, equipment, and month.
 - 🎯 Reuse familiar DAX functions instead of learning unnecessary new syntax.
@@ -196,7 +196,7 @@ This session intentionally **reuses DAX already learned**.
 
 - How many QC tests were performed?
 - What percentage passed?
-- How many tests were Fail or OOS?
+- How many tests were Fail or OOS (Out of Specification)?
 - How often were retests required?
 - What was the average turnaround time?
 
@@ -275,7 +275,7 @@ CALCULATE(
 )
 ```
 
-### OOS Test Count
+### OOS (Out of Specification) Test Count
 
 ```DAX
 OOS Test Count =
