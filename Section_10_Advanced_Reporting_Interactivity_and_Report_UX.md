@@ -159,8 +159,22 @@ RANKX(
 - 🎯 **`RANKX()` Purpose:** Evaluate a measure across a set of items and return the rank of the current item.
 - 🎯 **`ALL()` Purpose:** Remove the current Product Name filter so all Products can be compared.
 - 🧭 **Target:** Rank Products from highest to lowest Production Quantity.
-- 💡 `DESC` → highest Production Quantity receives Rank 1.
-- 💡 `DENSE` → tied ranks do not create gaps.
+- 💡 **`DESC`** → the Product with the highest Production Quantity receives **Rank 1**.
+- 💡 **`DENSE`** → if two or more Products have the same Production Quantity, they receive the same rank and the next rank continues without a gap.
+
+Example:
+
+| Product | Production Quantity | Dense Rank |
+|---|---:|---:|
+| Product A | 100,000 | 1 |
+| Product B | 90,000 | 2 |
+| Product C | 90,000 | 2 |
+| Product D | 80,000 | 3 |
+
+Without dense ranking, the sequence could be `1, 2, 2, 4`.  
+With **`DENSE`**, it becomes `1, 2, 2, 3`.
+
+> 💡 **Simple Rule:** `DENSE` means **“same value → same rank, but do not skip the next rank.”**
 
 ---
 
